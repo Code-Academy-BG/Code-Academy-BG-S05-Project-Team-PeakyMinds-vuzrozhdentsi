@@ -1,5 +1,4 @@
 #include "Board.hpp"
-<<<<<<< Updated upstream
 
 Board::Board(std::string id, int height = 0, int width = 0) : id(id), height(height), width(width)
 {
@@ -28,23 +27,3 @@ bool Board::operator!=(const Board &b) const
 {
     return !(*this == b);
 }
-=======
-/* class Board
-{
-    private:
-    std::string id = "";
-    int height = 0;
-    int width = 0;
-
-    public:
-    Board(std::string id, int height = 0, int width = 0) : id(id), height(height), width(width)
-    {}
-}; */
-
-int main()
-{
-    Board board("123456789",3,7);
-    //board.createBoardRepresentation();
-    board.printBoard();
-}
->>>>>>> Stashed changes

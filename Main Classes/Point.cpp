@@ -10,22 +10,6 @@ void Point::set(int xVal, int yVal)
     this->y = yVal;
 } */
 
-<<<<<<< Updated upstream
-std::string Point::toString()
-{
-    std::string s{""};
-    s = '(' + this->x + ',' + this->y + ')';
-    return s;
-}
-
-std::string Point::toMachineLevelFormatString(unsigned int bits)
-{
-       unsigned long res{0};
-    res |= this->x; 
-    res <<= bits;
-    res |=  this->y;
-    return std::to_string(res);
-=======
 
 
 
@@ -42,6 +26,5 @@ int main()
 
     Point s(xVal, yVal);
     std::string str = s.toString();
-    std::cout<<str;
->>>>>>> Stashed changes
+    // std::cout<<str;
 }

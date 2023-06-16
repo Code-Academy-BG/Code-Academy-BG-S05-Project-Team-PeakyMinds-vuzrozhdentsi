@@ -12,7 +12,6 @@ class Board
     int width;
 
     public:
-<<<<<<< Updated upstream
     Board(std::string id ="", int height = 0, int width = 0);
     int getHeight() const;
     int getWidth() const;
@@ -20,11 +19,6 @@ class Board
     bool operator<(const Board & b) const;
     bool operator==(const Board & b) const;
     bool operator!=(const Board & b) const;
-=======
-    Board(std::string id ="", int height = 0, int width = 0) 
-    : id(id), height(height), width(width)
-    {}
-
     void printBoard()
     {
         std::cout<<"\nBoard ID:"<<id;
@@ -38,7 +32,6 @@ class Board
         }
     }
 
->>>>>>> Stashed changes
 };
 
 #endif
