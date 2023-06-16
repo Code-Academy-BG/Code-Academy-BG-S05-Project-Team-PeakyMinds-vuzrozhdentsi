@@ -17,6 +17,7 @@
     const int getId() const;
     void setPosition(int x, int y);
     std::string toString();
+    std::string toMachineLevelFormatString();
  };
 
 #endif
