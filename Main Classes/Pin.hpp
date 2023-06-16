@@ -3,7 +3,6 @@
 
 #include<string>
 #include"Point.hpp"
-
  class Point;
 
  class Pin
@@ -13,9 +12,16 @@
     Point point;
  public:
     // Pin();
-    Pin(int id, int x=0, int y=0);
-    const int getId() const;
-    void setPosition(int x, int y);
+    Pin(int id, int x=0, int y=0) : id(id)
+    {}
+    const int getId() const
+    {
+      return this->id;
+    }
+    void setPosition(int x, int y)
+    {
+      point.x
+    }
     std::string toString();
     std::string toMachineLevelFormatString();
  };

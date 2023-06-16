@@ -1,4 +1,5 @@
 #include "Board.hpp"
+<<<<<<< Updated upstream
 
 Board::Board(std::string id, int height = 0, int width = 0) : id(id), height(height), width(width)
 {

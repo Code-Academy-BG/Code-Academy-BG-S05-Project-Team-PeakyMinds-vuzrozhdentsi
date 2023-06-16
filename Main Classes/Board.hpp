@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include <iostream>
+#include <vector>
 class Board
 {
     private:
@@ -11,6 +13,7 @@ class Board
     int width;
 
     public:
+<<<<<<< Updated upstream
     Board(std::string id ="", int height = 0, int width = 0);
     int getHeight() const;
     int getWidth() const;
@@ -18,6 +21,8 @@ class Board
     bool operator<(const Board & b) const;
     bool operator==(const Board & b) const;
     bool operator!=(const Board & b) const;
+=======
+>>>>>>> Stashed changes
 };
 
 #endif
