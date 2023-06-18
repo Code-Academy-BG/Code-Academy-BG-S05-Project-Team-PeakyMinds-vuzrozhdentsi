@@ -7,11 +7,7 @@
 #include <vector>
 #include <algorithm>
 
-struct Order {
-    std::string name;
-    //int priority;
-};
-
+//client order
 class OrderManager {
 private:
     std::string filename;
