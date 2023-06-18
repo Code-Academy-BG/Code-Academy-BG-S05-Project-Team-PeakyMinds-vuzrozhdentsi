@@ -26,7 +26,7 @@ public:
     {
         return "(" + std::to_string(this->x) + "," + std::to_string(this->y) + ")";
     }
-    std::string Point::toMachineLevelFormatString(unsigned int bits)
+    std::string Point::toMachineLevelFormatString(unsigned int bits = BIT8)
     {
         unsigned long res{0};
         res |= this->x;

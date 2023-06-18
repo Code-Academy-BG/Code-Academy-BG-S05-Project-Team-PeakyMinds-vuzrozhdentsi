@@ -19,6 +19,7 @@ class Board
     bool operator<(const Board & b) const;
     bool operator==(const Board & b) const;
     bool operator!=(const Board & b) const;
+    // do we really need to print boards?
     void printBoard()
     {
         std::cout<<"\nBoard ID:"<<id;

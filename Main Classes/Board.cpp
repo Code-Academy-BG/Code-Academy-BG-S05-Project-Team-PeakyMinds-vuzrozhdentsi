@@ -15,6 +15,7 @@ const std::string Board::getId() const
 {
     return this->id;
 }
+// returns true if the 2 sides are smaller OR the area is smaller
 bool Board::operator<(const Board &b) const
 {
     return (this->height < b.height && this->width < b.width) || (this->height * this->width < b.height * b.width);

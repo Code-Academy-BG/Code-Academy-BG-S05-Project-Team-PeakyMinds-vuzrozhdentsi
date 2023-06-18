@@ -14,6 +14,7 @@ public:
     ElectronicConnection();
     ElectronicConnection(ElectronicComponent e1,int pinPosition1,ElectronicComponent e2, int pinPostion2);
     void resetConnection(ElectronicComponent e1,int pinPosition1,ElectronicComponent e2, int pinPostion2);
+    std::string toMachineLevelFormatSting();
     std::string toString();
 };
 

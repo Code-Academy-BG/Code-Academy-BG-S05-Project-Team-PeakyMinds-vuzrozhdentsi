@@ -31,7 +31,9 @@
                          : id(id), height(height), width(width), boardOrderNumber(boardOrderNumber), rotation(rotation),
                          startingPosition(startingPosition), pins(pins)
                          {}
-
+    const std::string getId() const;
+    Point * getStartingPosition() const;
+    const std::string getRotation() const;
     void setBoardOrderNumber(int number)
     {
         this->boardOrderNumber = number;
@@ -43,12 +45,14 @@
     void addPin(int x, int y) //this is the moment to Pin p.setid = vector index
     {
         std::string pinId = "pinID:" + pins.size();
-        Pin p(pinId,x,y);
+        Pin p(pins.size(),x,y);
         pins.emplace_back(p);
     }
     void rotate(int x); 
+    // returnd Id and Pins coordinates
     std::string toString()
     {
+
         for (auto pin : pins)
             pin.toString();
     }
