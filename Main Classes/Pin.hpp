@@ -20,7 +20,7 @@
     }
     void setPosition(int x, int y)
     {
-      point.x
+      point.set(x,y);
     }
     std::string toString();
     std::string toMachineLevelFormatString();
