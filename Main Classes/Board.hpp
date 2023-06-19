@@ -1,5 +1,5 @@
-#ifndef BOARD_H
-#define BOARD_H
+#ifndef BOARD_HPP
+#define BOARD_HPP
 
 #include <string>
 #include <iostream>
@@ -15,11 +15,11 @@ class Board
     Board(std::string id ="", int height = 0, int width = 0);
     int getHeight() const;
     int getWidth() const;
-    const std::string getId() const;
-    bool operator<(const Board & b) const;
-    bool operator==(const Board & b) const;
-    bool operator!=(const Board & b) const;
-    // do we really need to print boards?
+    std::string getId() const;
+    friend bool operator<(const Board & b1, const Board & b2);
+    friend bool operator==(const Board & b1, const Board & b2);
+    friend bool operator!=(const Board & b1, const Board & b2);
+    
     void printBoard()
     {
         std::cout<<"\nBoard ID:"<<id;

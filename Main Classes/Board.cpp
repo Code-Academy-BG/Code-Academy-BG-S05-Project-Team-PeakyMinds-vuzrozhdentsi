@@ -1,6 +1,6 @@
 #include "Board.hpp"
 
-Board::Board(std::string id, int height = 0, int width = 0) : id(id), height(height), width(width)
+Board::Board(std::string id, int height, int width) : id{id}, height {height}, width{width}
 {
 }
 int Board::getHeight() const
@@ -11,20 +11,20 @@ int Board::getWidth() const
 {
     return this->width;
 }
-const std::string Board::getId() const
+std::string Board::getId() const
 {
     return this->id;
 }
 // returns true if the 2 sides are smaller OR the area is smaller
-bool Board::operator<(const Board &b) const
+bool operator<(const Board &b1, const Board &b2)
 {
-    return (this->height < b.height && this->width < b.width) || (this->height * this->width < b.height * b.width);
+    return (b1.getHeight() < b2.getHeight() && b1.getWidth() < b2.getWidth()) || (b1.getHeight() * b1.getWidth() < b2.getHeight() * b2.getWidth());
 }
-bool Board::operator==(const Board &b) const
+bool operator==(const Board &b1, const Board &b2)
 {
-    return (this->height == b.height && this->width == b.width);
+    return (b1.getHeight() == b2.getHeight() && b1.getWidth() == b2.getWidth());
 }
-bool Board::operator!=(const Board &b) const
+bool operator!=(const Board &b1, const Board &b2)
 {
-    return !(*this == b);
+    return !(b1 == b2);
 }
