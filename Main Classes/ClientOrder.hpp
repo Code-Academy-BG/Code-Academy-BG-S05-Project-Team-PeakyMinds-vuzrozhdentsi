@@ -1,5 +1,5 @@
-#ifndef POINT_H
-#define POINT_H
+#ifndef CLIENT_ORDER_H
+#define CLIENT_ORDER_H
 
 #include "HardwareComponent.hpp"
 #include "ElectronicComponent.hpp"
