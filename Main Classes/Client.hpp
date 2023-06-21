@@ -16,18 +16,12 @@ public:
     Client getById(int id);
     Client getByName(const std::string & givenName);
     std::vector<ClientOrder> getOrders();
-    setName(const std::string & newName);
+   void setName(const std::string & newName);
     void addOrder(ClientOrder co);
     void updateOrder(ClientOrder co);
     void deleteOrder (ClientOrder co);
 };
 
-Client::Client(/* args */)
-{
-}
 
-Client::~Client()
-{
-}
 
 #endif

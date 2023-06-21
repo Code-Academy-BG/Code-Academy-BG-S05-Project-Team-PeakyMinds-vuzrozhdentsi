@@ -22,7 +22,7 @@ void Client::setName(const std::string& newName) {
     
 
 void Client::addOrder(ClientOrder co) {
-    orderManager.addOrder(co);  
+    //orderManager.addOrder();  
     orders.push_back(co);       
 }
 
