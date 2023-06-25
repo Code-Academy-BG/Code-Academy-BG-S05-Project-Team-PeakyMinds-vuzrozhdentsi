@@ -23,6 +23,44 @@ int ElectronicComponent::getRotation() const
         break;
     }
 }
+ElectronicComponent::Rotation ElectronicComponent::getRotationByQuadrant(int x) const
+{
+    switch (x)
+    {
+    case 1:
+        return ElectronicComponent::Rotation::Zero;
+        break;
+    case 2:
+        return ElectronicComponent::Rotation::StraightAngle;
+        break;
+    case 3 :
+        return ElectronicComponent::Rotation::UTurn;
+        break;
+    case 4:
+        return ElectronicComponent::Rotation::ThreeQuarters;
+        break;
+    // Exception to be thrown
+    }
+}
+Pin* ElectronicComponent:: getPinById(int wantedId)
+{
+    for (Pin & p: getPins())
+    {
+        if (p.getId() == wantedId)
+        {
+            return &p;
+        }
+    }
+    return nullptr;
+}
+ElectronicComponent* ElectronicComponent::getElectronicComponentByBoardNumber(int wantedBoardNumber)
+{
+    if (wantedBoardNumber == getBoardOrderNumber())
+    {
+        return this;
+    }
+    return nullptr;
+}
 void ElectronicComponent::setRotation(int quadrantNumber)
 {
     switch (quadrantNumber)
@@ -98,6 +136,55 @@ std::string ElectronicComponent::widthAndHeightToMachineLevelFormat(int bits)
     res |= this->getWidth();
     return std::to_string(res);
 }
+std::string ElectronicComponent::serialize() const
+{
+    std::string result{""};
+    result.append(getId()).append(" ").append(std::to_string(getHeight())).append(" ").append(std::to_string(getWidth()))
+    .append(" ").append(std::to_string(getBoardOrderNumber())).append(" ").append(std::to_string(getRotation()))
+    .append(" ").append(startingPosition.serialize()).append(" ").append(std::to_string(getPins().size())).append(" ");
+    for (Pin & p : getPins())
+    {
+        result.append(p.serialize()).append(" ");
+    }
+    return result;
+}
+ElectronicComponent ElectronicComponent::deserialize(std::stringstream & strm)
+{
+    std::string newId{""};
+    std::string temp{""};
+    int newHeight{0};
+    int newWidth{0};
+    int newBoardOrderNumber{0};
+    ElectronicComponent::Rotation newRotation;
+    Point newStartingPosition;
+    int numberOfPins{0};
+    std::vector<Pin> newPins;
+    strm>>newId>>temp;
+    newHeight = std::stoi(temp);
+    temp.clear();
+    strm>>temp;
+    newWidth= std::stoi(temp);
+    temp.clear();
+    strm>>temp;
+    newBoardOrderNumber= std::stoi(temp);
+    temp.clear();
+    strm>>temp;
+    newRotation = getRotationByQuadrant(std::stoi(temp));
+    temp.clear();
+    strm>>temp;
+    newStartingPosition = newStartingPosition.deserialize(strm);
+    numberOfPins = std::stoi(temp);
+    
+    for (size_t i = 0; i < numberOfPins; i++)
+    {
+        Pin p;
+        p = p.deserialize(strm);
+        newPins.push_back(p);
+    }
+    
+    ElectronicComponent result{newId, newHeight, newWidth, newBoardOrderNumber, newStartingPosition, newRotation, pins};
+    return result;
+}
 
 bool operator<(const ElectronicComponent &e1, const ElectronicComponent &e2)
 {
@@ -126,7 +213,6 @@ bool operator<(const ElectronicComponent &e1, const ElectronicComponent &e2)
     }
     return false;
 }
-
 bool operator==(const ElectronicComponent &e1, const ElectronicComponent &e2)
 {
     if (e1.getPins().size() != e2.getPins().size())

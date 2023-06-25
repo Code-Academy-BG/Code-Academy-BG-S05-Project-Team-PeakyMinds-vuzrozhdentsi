@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <vector>
 class Board
 {
@@ -16,6 +17,8 @@ class Board
     int getHeight() const;
     int getWidth() const;
     std::string getId() const;
+    std::string serialize() const;
+    Board deserialize(std::stringstream & strm);
     friend bool operator<(const Board & b1, const Board & b2);
     friend bool operator==(const Board & b1, const Board & b2);
     friend bool operator!=(const Board & b1, const Board & b2);

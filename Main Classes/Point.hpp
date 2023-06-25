@@ -2,6 +2,7 @@
 #define POINT_H
 
 #include <string>
+#include<sstream>
 
 class Point
 {
@@ -52,6 +53,21 @@ public:
         res <<= bits;
         res |= this->y;
         return std::to_string(res);
+    }
+    std::string serialize() const
+    {
+        std::string result{""};
+        result.append(std::to_string(getX())).append(" ").append(std::to_string(getY()));
+        return result;
+    }
+    Point deserialize(std::stringstream & strm)
+    {
+        
+        std::string lineX{0}, lineY{0};
+        Point p;
+        strm>>lineX >> lineY;
+        p.set(std::stoi(lineX), std::stoi(lineY));
+        return p;
     }
     friend bool operator<(const Point & p1, const Point & p2)
     {
