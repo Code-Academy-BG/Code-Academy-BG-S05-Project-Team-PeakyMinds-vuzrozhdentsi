@@ -1,27 +1,15 @@
-#ifndef ORDER_MANAGER_HPP
-#define ORDER_MANAGER_HPP
+#ifndef ORDERMANAGER_HPP
+#define ORDERMANAGER_HPP
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <algorithm>
+#include <string>
 
-//client order
-class OrderManager {
-private:
-    std::string filename;
-
+class OrderManager
+{
 public:
-    OrderManager(const std::string& filename = "orders.txt") : filename(filename) {}
-
-    void run();
-
-private:
-    void addOrder();
-    void displayOrders();
-    //void displayOrdersByPriority();
-    void cancelOrder(const std::string& orderName);
+    void addOrder(const std::string& filename);
+    void displayOrders(const std::string& filename);
+    void displayOrdersByPriority(const std::string& filename, ClientOrder::Priority priority);
+    void cancelOrder(const std::string& filename, int orderId);
 };
 
-#endif 
+#endif  
