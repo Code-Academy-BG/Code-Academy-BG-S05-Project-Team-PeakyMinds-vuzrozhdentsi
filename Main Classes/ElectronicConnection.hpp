@@ -11,7 +11,7 @@ private:
     std::pair<ElectronicComponent,ElectronicComponent> electronicComponentConnection;
     std::pair<Pin,Pin> pinConnection;
 public:
-    ElectronicConnection();
+    ElectronicConnection(){};
     ElectronicConnection(ElectronicComponent e1,Pin pin1,ElectronicComponent e2, Pin pin2)
     {
         electronicComponentConnection.first = e1;

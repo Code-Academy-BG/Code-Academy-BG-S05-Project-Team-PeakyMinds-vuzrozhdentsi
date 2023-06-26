@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include<sstream>
+#include <sstream>
 #include "Pin.hpp"
 #include "Point.hpp"
 #include <iostream>
@@ -67,7 +67,7 @@ public:
                 std::cout << component[i][j];
         }
     }
-     ElectronicComponent(std::string id, int height, int width, int boardOrderNumber,
+    ElectronicComponent(std::string id, int height, int width, int boardOrderNumber,
                         Point startingPosition, Rotation rotation, std::vector<Pin> pins)
         : id{id}, height{height}, width{width}, boardOrderNumber{boardOrderNumber},
           startingPosition{startingPosition}, rotation{rotation}, pins{pins}
@@ -95,12 +95,12 @@ public:
     {
         return this->boardOrderNumber;
     }
-    ElectronicComponent* getElectronicComponentByBoardNumber(int wantedBoardNumber);
+    ElectronicComponent *getElectronicComponentByBoardNumber(int wantedBoardNumber);
     std::vector<Pin> getPins() const
     {
         return this->pins;
     }
-    Pin* getPinById(int wantedId);
+    Pin *getPinById(int wantedId);
     void setStartingPosition(Point point);
     void setHeight(int h)
     {
@@ -121,6 +121,126 @@ public:
         Pin p(getPins().size() + 1, x, y);
         pins.emplace_back(p);
         component[y][x] = p.getId();
+    }
+    inline void resetAllPins()
+    {
+        for (auto iter = pins.begin(); iter != pins.end(); ++iter)
+        {
+            component[iter->getPoint().getY()][iter->getPoint().getX()] = iter->getId();
+        }
+    }
+    inline void swapHeightAndWeight()
+    {
+        int temp = height;
+        height = width;
+        width = temp;
+    }
+    inline void buildComponentAnew()
+    {
+        component = {};
+        for (int i = 0; i < height; ++i)
+        {
+            std::vector<int> vec1;
+
+            for (int j = 0; j < width; ++j)
+            {
+                vec1.emplace_back(0);
+            }
+            component.emplace_back(vec1);
+        } 
+    }
+    void clearPinsFromComponent()//bugav
+    {
+        for (int i = 0; i < height; ++i)
+        {
+            for (int j = 0; j < width; ++j)
+            {
+                if (component[i][j] != 0)
+                {
+                    component[i][j] == 0;
+                }
+            }
+        }
+    }
+
+    void rotateThePins(int x)
+    {
+        if (x == static_cast<int>(Rotation::StraightAngle))
+        {
+            for (int i = 0; i < height; ++i)
+            {
+                for (int j = 0; j < width; ++j)
+                {
+                    if (component[i][j] != 0)
+                    {
+                        // std::cout<<'\n'<<'|'<<'['<<i<<']'<<'['<< j << ']'<<'='<<'['<<j<<']'<<'['<<height-i-1<<']';
+                        // pin(j,i) -> pin(height-i-1,j)
+                        for (auto iter = pins.begin(); iter != pins.end(); ++iter)
+                        {
+                            if (iter->getId() == component[i][j])
+                            {
+                                iter->setPosition(height - i - 1, j);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            swapHeightAndWeight();
+            buildComponentAnew();
+        }
+
+        else if (x == static_cast<int>(Rotation::UTurn)) // 180gradusa//tuka nqma nujda da prazni vektora, no za test
+        {
+                for (int i = 0; i < height; i++)
+                {
+                    for (int j = 0; j < width; j++)
+                    {
+                        if (component[i][j] != 0)
+                        {
+                             //std::cout<<'\n'<<'|'<<'['<<i<<']'<<'['<<j<<']'<<'='<<'['<< height-1-i<<']'<<'['<<width-j-1<<']'; 
+                             //pin(j,i) -> pin(width-j-1,height-1-i)
+                            for (auto iter = pins.begin(); iter != pins.end(); ++iter)
+                            {
+                                if (iter->getId() == component[i][j])
+                                {
+                                    iter->setPosition(width-j-1,height-1-i);
+                                    break;
+                                    //std::swap(component[i][j], component[height - 1 - i][width - j - 1]);
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+            buildComponentAnew();
+        }
+
+        else if (x == static_cast<int>(Rotation::ThreeQuarters))
+        {
+            for (int i = 0; i < height; ++i)
+            {
+                for (int j = 0; j < width; ++j)
+                {
+                    if (component[i][j] != 0)
+                    {
+                         //std::cout<<'\n'<<'|'<<'['<<i<<']'<<'['<< j << ']'<<'='<<'['<<width-j-1<<']'<<'['<<i<<']';
+                        // pin(j,i) -> pin(i,width-j-1)
+                        for (auto iter = pins.begin(); iter != pins.end(); ++iter)
+                        {
+                            if (iter->getId() == component[i][j])
+                            {
+                                iter->setPosition(i,width-j-1);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            swapHeightAndWeight();
+            buildComponentAnew();
+        }
+        resetAllPins();
     }
 
     int rotate(int x)
@@ -201,10 +321,10 @@ public:
                 std::vector<int> vec1 = {};
                 for (int j = 0; j < height; j++)
                 {
-                    //std::cout << "\nmini rotation cycle";
-                    vec1.push_back(component[j][width-i-1]);
+                    // std::cout << "\nmini rotation cycle";
+                    vec1.push_back(component[j][width - i - 1]);
 
-                    std::cout << ' ' << '[' << i << ']' << '[' << j << ']' << '=' << '[' << j << ']' << '[' <<width-i-1<< ']';// << component[i][j] << '=' << component[height - 1 - i][width - j - 1];
+                    std::cout << ' ' << '[' << i << ']' << '[' << j << ']' << '=' << '[' << j << ']' << '[' << width - i - 1 << ']'; // << component[i][j] << '=' << component[height - 1 - i][width - j - 1];
                 }
                 rotatedVector.push_back(vec1);
             }
@@ -231,16 +351,13 @@ public:
     std::string toDecsriptionFormatSting();
     std::string toMachineLevelFormatSting();
     std::string toVisualLevelSting();
-<<<<<<< Updated upstream
     std::string serialize() const;
-    ElectronicComponent deserialize(std::stringstream & strm);
-    friend bool operator<(const ElectronicComponent & e1,const ElectronicComponent & e2);
-    friend bool operator==(const ElectronicComponent & e1,const ElectronicComponent & e2);
-    friend bool operator!=(const ElectronicComponent & e1,const ElectronicComponent & e2);
-=======
+    ElectronicComponent deserialize(std::stringstream &strm);
     friend bool operator<(const ElectronicComponent &e1, const ElectronicComponent &e2);
     friend bool operator==(const ElectronicComponent &e1, const ElectronicComponent &e2);
     friend bool operator!=(const ElectronicComponent &e1, const ElectronicComponent &e2);
->>>>>>> Stashed changes
+    friend bool operator<(const ElectronicComponent &e1, const ElectronicComponent &e2);
+    friend bool operator==(const ElectronicComponent &e1, const ElectronicComponent &e2);
+    friend bool operator!=(const ElectronicComponent &e1, const ElectronicComponent &e2);
 };
 #endif

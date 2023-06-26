@@ -3,7 +3,7 @@
 Pin::Pin(int id, int x, int y) : id{id}, point{x,y}
 {
 }
-Pin::Pin(int id=0, Point pnt): id{id}, point{pnt}
+Pin::Pin(int id, Point pnt): id{id}, point{pnt}
 {
 }
 
