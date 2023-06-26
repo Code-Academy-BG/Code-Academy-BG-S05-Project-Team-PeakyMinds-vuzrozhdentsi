@@ -3,6 +3,10 @@
 HardwareComponent::HardwareComponent() : id{""}
 {
 }
+HardwareComponent::HardwareComponent(std::string id, Board board, std::vector<ElectronicComponent> components, std::vector<ElectronicConnection> connections) :
+id{id}, board{board}, components{components}, connections{connections}
+{
+}
 std::string HardwareComponent::getId() const
 {
     return this->id;
@@ -34,6 +38,11 @@ void HardwareComponent::addElectronicComponent(ElectronicComponent e, Point p, i
     e.setBoardOrderNumber(this->getComponents().size() + 1);
     //... imprints the EC on the Board
     e.setStartingPosition(p);
+}
+void HardwareComponent::addConnection(ElectronicComponent e1,Pin p1, ElectronicComponent e2, Pin p2)
+{
+    ElectronicConnection connection {e1, p1, e2, p2};
+    getConnections().push_back(connection);
 }
 bool HardwareComponent::equals(const HardwareComponent &h)
 {
@@ -98,12 +107,50 @@ std::string HardwareComponent::toMachineLevelFormatSting()
 // std::string HardwareComponent::toVisualLevelSting()
 // {
 // }
-// std::string HardwareComponent::serialize()
-// {
-// }
-// HardwareComponent *HardwareComponent::deserialize(const std::string &line)
-// {
-// }
+std::string HardwareComponent::serialize()
+{
+    std::string result{""};
+    result.append(getId()).append(" ").append(getBoard().serialize()).append(" ").append(std::to_string(getComponents().size()));
+    for (ElectronicComponent & c : getComponents())
+    {
+        result.append(c.serialize()).append(" ");
+    }
+    result.append(std::to_string(getConnections().size())).append(" ");
+    for (ElectronicConnection connection : getConnections())
+    {
+        result.append(connection.serialize()).append(" ");
+    }
+    return result;
+}
+HardwareComponent HardwareComponent::deserialize(std::stringstream & strm)
+{
+    std::string newId{""};
+    Board b;
+    int numberOfComponents{0};
+    std::vector<ElectronicComponent> newComponents;
+    int numberOfConnections{0};
+    std::vector<ElectronicConnection> newConnections;
+    strm>>newId;
+    b = b.deserialize(strm);
+
+    for (size_t i = 0; i < numberOfComponents; i++)
+    {
+        ElectronicComponent eComp;
+        eComp = eComp.deserialize(strm);
+        newComponents.push_back(eComp);
+    }
+    
+    for (size_t i = 0; i < numberOfConnections; i++)
+    {
+        ElectronicConnection eConn;
+        eConn = eConn.deserialize(strm);
+        newConnections.push_back(eConn);
+    }
+
+    HardwareComponent result{newId, b, newComponents, newConnections};
+    return result;
+
+}
 bool operator<(const HardwareComponent &h1, const HardwareComponent &h2) 
 {
     std::vector <ElectronicComponent> h1SortedComponents = h1.getComponents();

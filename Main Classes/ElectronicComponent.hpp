@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include<sstream>
 #include "Pin.hpp"
 #include "Point.hpp"
 
@@ -38,6 +39,12 @@ public:
           startingPosition{startingPosition}, rotation{rotation}
     {
     }
+     ElectronicComponent(std::string id, int height, int width, int boardOrderNumber,
+                        Point startingPosition, Rotation rotation, std::vector<Pin> pins)
+        : id{id}, height{height}, width{width}, boardOrderNumber{boardOrderNumber},
+          startingPosition{startingPosition}, rotation{rotation}, pins{pins}
+    {
+    }
     std::string getId() const
     {
         return this->id;
@@ -55,14 +62,17 @@ public:
         return this->startingPosition;
     }
     int getRotation() const;
+    Rotation getRotationByQuadrant(int x) const;
     int getBoardOrderNumber() const
     {
         return this->boardOrderNumber;
     }
+    ElectronicComponent* getElectronicComponentByBoardNumber(int wantedBoardNumber);
     std::vector<Pin> getPins() const
     {
        return this->pins;
     }
+    Pin* getPinById(int wantedId);
     void setStartingPosition(Point point);
     void setHeight(int h)
     {
@@ -90,6 +100,8 @@ public:
     std::string toDecsriptionFormatSting();
     std::string toMachineLevelFormatSting();
     std::string toVisualLevelSting();
+    std::string serialize() const;
+    ElectronicComponent deserialize(std::stringstream & strm);
     friend bool operator<(const ElectronicComponent & e1,const ElectronicComponent & e2);
     friend bool operator==(const ElectronicComponent & e1,const ElectronicComponent & e2);
     friend bool operator!=(const ElectronicComponent & e1,const ElectronicComponent & e2);
