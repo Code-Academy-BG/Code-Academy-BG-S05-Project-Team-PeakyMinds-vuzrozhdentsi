@@ -96,9 +96,9 @@ void ElectronicComponent::setStartingPosition(Point point)
     }
     startingPosition.set(point.getX(), point.getY());
 }
-void ElectronicComponent::rotate(int x)
+/* void ElectronicComponent::rotate(int x)
 {
-}
+} */
 std::string ElectronicComponent::toString()
 {
     std::string result{""};
@@ -124,9 +124,12 @@ std::string ElectronicComponent::toMachineLevelFormatSting()
     {
         result.append(pin.toMachineLevelFormatString()).append(" ");
     }
+    return result;
 }
 std::string ElectronicComponent::toVisualLevelSting()
 {
+    std::string result{""};
+    return result;
 }
 std::string ElectronicComponent::widthAndHeightToMachineLevelFormat(int bits)
 {
