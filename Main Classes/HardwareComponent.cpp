@@ -31,19 +31,23 @@ HardwareComponent *HardwareComponent::getById(const std::string &requiredID)
     }
     return nullptr;
 }
-void HardwareComponent::addElectronicComponent(ElectronicComponent e, Point p, int rotationQuadrant)
+/* void HardwareComponent::addElectronicComponent(ElectronicComponent e, Point p, int rotationQuadrant)
 {
-    e.rotate(rotationQuadrant);
+   /*  e.rotate(rotationQuadrant);
     // if empty size is 0, so 1 is added prior changing the size
     e.setBoardOrderNumber(this->getComponents().size() + 1);
     //... imprints the EC on the Board
     e.setStartingPosition(p);
+<<<<<<< Updated upstream
 }
 void HardwareComponent::addConnection(ElectronicComponent e1,Pin p1, ElectronicComponent e2, Pin p2)
 {
     ElectronicConnection connection {e1, p1, e2, p2};
     getConnections().push_back(connection);
 }
+=======
+} */
+>>>>>>> Stashed changes
 bool HardwareComponent::equals(const HardwareComponent &h)
 {
     return *this == h;

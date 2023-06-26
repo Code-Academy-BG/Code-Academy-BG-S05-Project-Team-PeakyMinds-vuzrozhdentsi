@@ -46,6 +46,7 @@
         "set": "cpp",
         "iostream": "cpp",
         "istream": "cpp",
+<<<<<<< Updated upstream
         "fstream": "cpp",
         "cstring": "cpp",
         "ctime": "cpp",
@@ -63,5 +64,10 @@
         "xtr1common": "cpp",
         "xtree": "cpp",
         "xutility": "cpp"
+=======
+        "map": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp"
+>>>>>>> Stashed changes
     }
 }
