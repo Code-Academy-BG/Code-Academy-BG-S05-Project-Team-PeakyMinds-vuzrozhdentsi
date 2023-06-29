@@ -1,17 +1,18 @@
 #include "HardwareComponent.hpp"
-
+BoardFactory HardwareComponent:: boardFactory{};
+ElectronicComponentFactory HardwareComponent:: ecFactory{};
 HardwareComponent::HardwareComponent() : id{""}
 {
 }
-HardwareComponent::HardwareComponent(std::string id, Board board, std::vector<ElectronicComponent> components, std::vector<ElectronicConnection> connections) :
-id{id}, board{board}, components{components}, connections{connections}
+HardwareComponent::HardwareComponent(std::string id, Board board, ElectronicComponentContainer components, std::vector<ElectronicConnection> connections) :
+id{id}, board{boardFactory.getInstance(board)}, components{components}, connections{connections}
 {
 }
 std::string HardwareComponent::getId() const
 {
     return this->id;
 };
-std::vector<ElectronicComponent> HardwareComponent::getComponents() const
+HardwareComponent::ElectronicComponentContainer HardwareComponent::getComponents() const
 {
     return this->components;
 }
@@ -31,13 +32,13 @@ HardwareComponent *HardwareComponent::getById(const std::string &requiredID)
     }
     return nullptr;
 }
- void HardwareComponent::addElectronicComponent(ElectronicComponent e, Point p, int rotationQuadrant)
+ void HardwareComponent::addElectronicComponent(ElectronicComponent* e, Point* p, int rotationQuadrant)
 {
-     e.rotate(rotationQuadrant);
+     (*e).rotate(rotationQuadrant);
     // if empty size is 0, so 1 is added prior changing the size
-    e.setBoardOrderNumber(this->getComponents().size() + 1);
+    (*e).setBoardOrderNumber(this->getComponents().size() + 1);
     //... imprints the EC on the Board
-    e.setStartingPosition(p);
+    (*e).setStartingPosition(*p);
     //TODO - Add to Components Vector!
 }
 void HardwareComponent::addConnection(ElectronicComponent e1,Pin p1, ElectronicComponent e2, Pin p2)
@@ -54,9 +55,9 @@ std::string HardwareComponent::toDecsriptionFormatSting()
 {
     std::string result{""};
     result.append("id: ").append(this->id).append("\n").append("width: ").append(std::to_string(this->getBoard().getWidth())).append("\n").append("height: ").append(std::to_string(this->getBoard().getHeight())).append("\n").append("components: ").append("\n");
-    for (ElectronicComponent & component : getComponents())
+    for (HardwareComponent::ElectronicComponentFactoryType & component : getComponents())
     {
-        result.append(component.toString()).append("\n");
+        result.append((*component).toString()).append("\n");
     }
     result.append("connections: ");
     for (ElectronicConnection & connection : getConnections())
@@ -79,12 +80,12 @@ std::string HardwareComponent::toMachineLevelFormatSting()
         std::pair<int, std::string> pair;
         pair.first = counter;
         pair.second = stringRepresentation;
-        for (ElectronicComponent & component : getComponents())
+        for (HardwareComponent::ElectronicComponentFactoryType & component : getComponents())
         {
-            componentStringMap[component.getId()] = pair;
-            componentStringMap[component.getId()].first++;
-            componentStringMap[component.getId()].second.append(component.getStartingPosition().toMachineLevelFormatString())
-                                                        .append(" ").append(std::to_string(component.getRotation()));
+            componentStringMap[(*component).getId()] = pair;
+            componentStringMap[(*component).getId()].first++;
+            componentStringMap[(*component).getId()].second.append((*component).getStartingPosition().toMachineLevelFormatString())
+                                                        .append(" ").append(std::to_string((*component).getRotation()));
         }
 
         // adding the mapping to the final result, first component ID, then the amount in the hardware component and for each starting position and rotation
@@ -113,9 +114,9 @@ std::string HardwareComponent::serialize()
 {
     std::string result{""};
     result.append(getId()).append(" ").append(getBoard().serialize()).append(" ").append(std::to_string(getComponents().size()));
-    for (ElectronicComponent & c : getComponents())
+    for (HardwareComponent::ElectronicComponentFactoryType & c : getComponents())
     {
-        result.append(c.serialize()).append(" ");
+        result.append((*c).serialize()).append(" ");
     }
     result.append(std::to_string(getConnections().size())).append(" ");
     for (ElectronicConnection connection : getConnections())
@@ -129,17 +130,17 @@ HardwareComponent HardwareComponent::deserialize(std::stringstream & strm)
     std::string newId{""};
     Board b;
     int numberOfComponents{0};
-    std::vector<ElectronicComponent> newComponents;
+    HardwareComponent::ElectronicComponentContainer newComponents;
     int numberOfConnections{0};
     std::vector<ElectronicConnection> newConnections;
     strm>>newId;
     b = b.deserialize(strm);
-
+    b = boardFactory.getInstance(b);
     for (size_t i = 0; i < numberOfComponents; i++)
     {
         ElectronicComponent eComp;
         eComp = eComp.deserialize(strm);
-        newComponents.push_back(eComp);
+        newComponents.push_back(ecFactory.getInstancePointer(eComp));
     }
     
     for (size_t i = 0; i < numberOfConnections; i++)
@@ -155,8 +156,8 @@ HardwareComponent HardwareComponent::deserialize(std::stringstream & strm)
 }
 bool operator<(const HardwareComponent &h1, const HardwareComponent &h2) 
 {
-    std::vector <ElectronicComponent> h1SortedComponents = h1.getComponents();
-    std::vector <ElectronicComponent> h2SortedComponents = h2.getComponents();
+    HardwareComponent::ElectronicComponentContainer  h1SortedComponents = h1.getComponents();
+    HardwareComponent::ElectronicComponentContainer  h2SortedComponents = h2.getComponents();
     std::vector <ElectronicConnection> h1SortedConnections = h1.getConnections();
     std::vector <ElectronicConnection> h2SortedConnections = h2.getConnections();
     if (h1.getBoard() < h2.getBoard())
@@ -186,8 +187,8 @@ bool operator==(const HardwareComponent &h1, const HardwareComponent &h2)
     {
         return false;
     }
-    std::vector <ElectronicComponent> h1SortedComponents = h1.getComponents();
-    std::vector <ElectronicComponent> h2SortedComponents = h2.getComponents();
+    HardwareComponent::ElectronicComponentContainer  h1SortedComponents = h1.getComponents();
+    HardwareComponent::ElectronicComponentContainer  h2SortedComponents = h2.getComponents();
     std::vector <ElectronicConnection> h1SortedConnections = h1.getConnections();
     std::vector <ElectronicConnection> h2SortedConnections = h2.getConnections();
     std::sort(h1SortedComponents.begin(),h1SortedComponents.end());

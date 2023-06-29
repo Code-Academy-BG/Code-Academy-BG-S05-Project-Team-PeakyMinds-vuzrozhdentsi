@@ -5,8 +5,8 @@
 #include <vector>
 #include <algorithm>
 #include <sstream>
-#include "Pin.hpp"
-#include "Point.hpp"
+#include"PinFactory.hpp"
+#include"PointFactory.hpp"
 #include <iostream>
 class ElectronicComponent
 {
@@ -18,16 +18,26 @@ class ElectronicComponent
         UTurn = 180,
         ThreeQuarters = 270
     };
+public:
+    using PinFactoryRawMaterial = PinFactory::FactoryRawMaterial;
+    using PinFactoryType = PinFactory::FactoryType;
+    using PointFactoryRawMaterial = PointFactory::FactoryRawMaterial;
+    using PointFactoryType = PointFactory::FactoryType;
+    using ECID = std::string;
+    using PinContainer = std::vector<PinFactoryType>;
 
+    static PinFactory pinFactory;
+    
 private:
-    std::string id;
+
+    ECID id;
     int height;
     int width;
     std::vector<std::vector<int>> component = {};
     int boardOrderNumber;
     Rotation rotation;
-    Point startingPosition;
-    std::vector<Pin> pins;
+    PointFactoryType startingPosition;
+    PinContainer pins;
 
 private:
     static const unsigned int BIT8 = 8;
@@ -35,9 +45,9 @@ private:
 
 public:
     ElectronicComponent(std::string id = "", int height = 0, int width = 0, int boardOrderNumber = 0,
-                        Point startingPosition = Point(0, 0), Rotation rotation = Rotation::Zero)
+                        PointFactoryRawMaterial startingPosition = Point(0, 0), Rotation rotation = Rotation::Zero)
         : id{id}, height{height}, width{width}, boardOrderNumber{boardOrderNumber},
-          startingPosition{startingPosition}, rotation{rotation}
+          startingPosition{Pin::factory.getInstancePointer(startingPosition)}, rotation{rotation}
     {
         // int counter = 1;
         for (int i = 0; i < height; ++i)
@@ -68,12 +78,12 @@ public:
         }
     }
     ElectronicComponent(std::string id, int height, int width, int boardOrderNumber,
-                        Point startingPosition, Rotation rotation, std::vector<Pin> pins)
+                        Point startingPosition, Rotation rotation, PinContainer pins)
         : id{id}, height{height}, width{width}, boardOrderNumber{boardOrderNumber},
-          startingPosition{startingPosition}, rotation{rotation}, pins{pins}
+          startingPosition{Pin::factory.getInstancePointer(startingPosition)}, rotation{rotation}, pins{pins}
     {
     }
-    std::string getId() const
+    ECID getId() const
     {
         return this->id;
     }
@@ -87,7 +97,11 @@ public:
     }
     const Point &getStartingPosition() const
     {
-        return this->startingPosition;
+        return *startingPosition;
+    }
+    const PointFactoryType getStartingPositionPtr() const
+    {
+        return startingPosition;
     }
     int getRotation() const;
     Rotation getRotationByQuadrant(int x) const;
@@ -96,7 +110,7 @@ public:
         return this->boardOrderNumber;
     }
     ElectronicComponent *getElectronicComponentByBoardNumber(int wantedBoardNumber);
-    std::vector<Pin> getPins() const
+    PinContainer getPins() const
     {
         return this->pins;
     }
@@ -119,14 +133,15 @@ public:
     void addPin(int x, int y) // this is the moment to Pin p.setid = vector index
     {
         Pin p(getPins().size() + 1, x, y);
-        pins.emplace_back(p);
+        
+        pins.emplace_back(pinFactory.getInstancePointer(p));
         component[y][x] = p.getId();
     }
     inline void resetAllPins()
     {
         for (auto iter = pins.begin(); iter != pins.end(); ++iter)
         {
-            component[iter->getPoint().getY()][iter->getPoint().getX()] = iter->getId();
+            component[(**iter).getPoint().getY()][(**iter).getPoint().getX()] = (**iter).getId();
         }
     }
     inline void swapHeightAndWeight()
@@ -177,9 +192,9 @@ public:
                         // pin(j,i) -> pin(height-i-1,j)
                         for (auto iter = pins.begin(); iter != pins.end(); ++iter)
                         {
-                            if (iter->getId() == component[i][j])
+                            if ((**iter).getId() == component[i][j])
                             {
-                                iter->setPosition(height - i - 1, j);
+                                (**iter).setPosition(height - i - 1, j);
                                 break;
                             }
                         }
@@ -202,9 +217,9 @@ public:
                              //pin(j,i) -> pin(width-j-1,height-1-i)
                             for (auto iter = pins.begin(); iter != pins.end(); ++iter)
                             {
-                                if (iter->getId() == component[i][j])
+                                if ((**iter).getId() == component[i][j])
                                 {
-                                    iter->setPosition(width-j-1,height-1-i);
+                                    (**iter).setPosition(width-j-1,height-1-i);
                                     break;
                                     //std::swap(component[i][j], component[height - 1 - i][width - j - 1]);
                                 }
@@ -228,9 +243,9 @@ public:
                         // pin(j,i) -> pin(i,width-j-1)
                         for (auto iter = pins.begin(); iter != pins.end(); ++iter)
                         {
-                            if (iter->getId() == component[i][j])
+                            if ((**iter).getId() == component[i][j])
                             {
-                                iter->setPosition(i,width-j-1);
+                                (**iter).setPosition(i,width-j-1);
                                 break;
                             }
                         }

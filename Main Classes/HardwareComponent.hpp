@@ -7,26 +7,39 @@
 #include <sstream>
 #include "ElectronicComponent.hpp"
 #include "ElectronicConnection.hpp"
+#include "ElectronicComponentFactory.hpp"
 #include "Board.hpp"
+#include "BoardFactory.hpp"
 #include <algorithm>
 
 class HardwareComponent
 {
+public:
+    using PinFactoryRawMaterial = PinFactory::FactoryRawMaterial;
+    using PinFactoryType = PinFactory::FactoryType;
+    using PointFactoryRawMaterial = PointFactory::FactoryRawMaterial;
+    using PointFactoryType = PointFactory::FactoryType;
+    using HCID = std::string;
+    using PinContainer = std::vector<PinFactoryType>;
+    using ElectronicComponentFactoryType = ElectronicComponentFactory::FactoryType;
+    using ElectronicComponentContainer = std::vector<ElectronicComponentFactoryType>;
 private:
-    std::string id;
+    static BoardFactory boardFactory;
+    static ElectronicComponentFactory ecFactory;
+    HCID id;
     Board board;
-    std::vector<ElectronicComponent> components;
+    ElectronicComponentContainer components;
     std::vector<ElectronicConnection> connections;
 
 public:
     HardwareComponent();
-    HardwareComponent(std::string id, Board board, std::vector<ElectronicComponent> components, std::vector<ElectronicConnection> connections);
-    std::string getId() const;
-    std::vector<ElectronicComponent> getComponents() const;
+    HardwareComponent(HCID id, Board board, ElectronicComponentContainer components, std::vector<ElectronicConnection> connections);
+    HCID getId() const;
+    ElectronicComponentContainer getComponents() const;
     std::vector<ElectronicConnection> getConnections() const;
     const Board & getBoard() const;
     HardwareComponent * getById(const std::string & id);
-    void addElectronicComponent(ElectronicComponent e, Point p, int rotationQuadrant);  
+    void addElectronicComponent(ElectronicComponent* e, Point* p, int rotationQuadrant);  
     void addConnection(ElectronicComponent e1,Pin p1, ElectronicComponent e2, Pin p2);
     bool equals (const HardwareComponent & h);
     std::string toDecsriptionFormatSting();

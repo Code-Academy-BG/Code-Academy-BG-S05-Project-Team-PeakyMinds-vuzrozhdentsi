@@ -4,29 +4,40 @@
 #include<string>
 #include<sstream>
 #include"Point.hpp"
+#include"PointFactory.hpp"
  class Point;
 
  class Pin
  {
- private:    
-    int id;
-    Point point;
+  public:
+    static PointFactory factory;
+ private:  
+
+  using idType = int;
+  using RawMaterial = PointFactory::FactoryRawMaterial;
+  using FactoryTypePtr = PointFactory::FactoryType;
+
+    idType id;
+    FactoryTypePtr point;
  public:
-    Pin(int id=0, int x=0, int y=0);
-    Pin(int id, Point p);
+    Pin(idType id=0, int x=0, int y=0);
+    Pin(idType id, Point p);
     
-    int getId() const
+    idType getId() const
     {
       return this->id;
     }
-    Point getPoint() const
+    RawMaterial getPoint() const
+    {
+      return *this->point;
+    }
+    FactoryTypePtr getPointPtr() const
     {
       return this->point;
     }
     void setPosition(int x, int y)
     {
-      point.set(x,y);
-      this->point.set(x,y);
+      point = factory.getInstancePointer(Point(x,y));
     }
     std::string toString();
     std::string toMachineLevelFormatString();
