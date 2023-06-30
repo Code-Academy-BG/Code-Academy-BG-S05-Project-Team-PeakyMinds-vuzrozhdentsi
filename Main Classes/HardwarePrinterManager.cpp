@@ -152,14 +152,7 @@ void fillUpMatrixMask(Board board,ElectronicComponent elcomp)
 {
   int cols = board.getWidth();
   int rows = board.getHeight();
-    for (int i = 0; i < cols; i++)
-    {
-      for (int j = 0; j < rows; j++)
-      {
-        
-      }
-      
-    }
+   
     
 
 }
