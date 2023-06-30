@@ -1,20 +1,20 @@
 #include "Pin.hpp"
-
-Pin::Pin(int id, int x, int y) : id{id}, point{x,y}
+PointFactory Pin::factory {};
+Pin::Pin(int id, int x, int y) : id{id}, point{factory.getInstancePointer(RawMaterial(x,y))}
 {
 }
-Pin::Pin(int id, Point pnt): id{id}, point{pnt}
+Pin::Pin(int id, Point pnt): id{id}, point{factory.getInstancePointer(pnt)}
 {
 }
 
 std::string Pin::toString()
 {
-    return this->point.toString();
+    return getPoint().toString();
 }
 
 std::string Pin::toMachineLevelFormatString()
 {
-    return this->point.toMachineLevelFormatString();
+    return getPoint().toMachineLevelFormatString();
 }
 std::string Pin::serialize() const
 {

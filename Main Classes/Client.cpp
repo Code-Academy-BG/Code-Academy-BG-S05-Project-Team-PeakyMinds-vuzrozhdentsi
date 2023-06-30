@@ -1,5 +1,9 @@
 #include "Client.hpp"
 
+// IMPORTANT
+// This class is only committed and pushed to repo as per CA request for visibility on the progress. 
+
+
 Client::Client() {
     
 }

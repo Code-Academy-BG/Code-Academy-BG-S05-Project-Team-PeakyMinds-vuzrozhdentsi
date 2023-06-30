@@ -5,6 +5,11 @@
 #include <string>
 #include <vector>
 #include <set> // to keep unique values??
+
+// IMPORTANT
+// This class is only committed and pushed to repo as per CA request for visibility on the progress. 
+
+
 class ElectronicComponentsManager
 {
 private:
