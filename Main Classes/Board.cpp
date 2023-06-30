@@ -11,6 +11,15 @@ int Board::getWidth() const
 {
     return this->width;
 }
+void Board::setHeight(int height)
+{
+  this->height = height;
+
+}
+void Board::setWidth(int width)
+{
+  this->width = width;
+}
 std::string Board::getId() const
 {
     return this->id;

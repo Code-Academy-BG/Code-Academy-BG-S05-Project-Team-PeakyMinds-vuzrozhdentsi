@@ -20,7 +20,11 @@ public:
         pinConnection.second = pin2;
     }
     // void resetConnection(ElectronicComponent e1,int pinPosition1,ElectronicComponent e2, int pinPostion2);
-    std::string toMachineLevelFormatSting(){
+    std::pair<Pin, Pin> getPinConnection() const {
+         return this->pinConnection;
+    }
+    std::string toMachineLevelFormatSting()
+    {
         std::string result{""};
         result.append(pinConnection.first.toMachineLevelFormatString()).append(" ").append(pinConnection.second.toMachineLevelFormatString());
         return result;

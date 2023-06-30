@@ -5,9 +5,9 @@
 #include <unordered_map>  
  
 #include "ClientOrder.hpp"   
-#include "OrderManager.hpp"  
-  
+#include "OrderManager.hpp"
 
+/*
 // Stream operator overload for displaying a ClientOrder object
 std::ostream& operator<<(std::ostream& os, const ClientOrder& order)
 {
@@ -76,46 +76,10 @@ std::istream& operator>>(std::istream& is, ClientOrder& order)
 
     return is;
 }
-
-void OrderManager::addOrder(const std::string& filename)
-{
-    std::ofstream file(filename, std::ios::app);
-    if (!file)
-    {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return;
-    }
-
-    int id;
-    int orderStatus; // Changed variable name from "status" to "orderStatus"
-    int priority;
     std::vector<HardwareComponent> hardwareComponents;
     std::vector<ElectronicComponent> electronicComponents;
 
-    std::cout << "Enter order ID: ";
-    std::cin >> id;
 
-    ClientOrder::Status status = ClientOrder::Status::UNPROCESSED;
-
-    std::cout << "Enter order priority (1 for HIGH, 2 for NORMAL): ";
-    std::cin >> priority;
-
-    // TODO: Read hardware and electronic components from blueprint file or the console
-
-    // Creating the client order
-    ClientOrder order;
-    order.setId(id);
-    order.setStatus(static_cast<ClientOrder::Status>(orderStatus)); // Changed variable name from "status" to "orderStatus"
-    order.setPriority(static_cast<ClientOrder::Priority>(priority));
-    order.setHardwareComponents(hardwareComponents);
-    order.setElectronicComponents(electronicComponents);
-
-    // Saveing the order to the file
-    file << order << std::endl;
-    file.close();
-
-    std::cout << "Order placed successfully." << std::endl;
-}
 
 void OrderManager::displayOrders(const std::string& filename)
 {
@@ -134,7 +98,7 @@ void OrderManager::displayOrders(const std::string& filename)
     }
     file.close();
 
-    // Sort orders by their order of placement 
+    // Sort orders by their order of placement
     std::sort(orders.begin(), orders.end(), [](const ClientOrder& a, const ClientOrder& b) {
         return a.getId() < b.getId();
     });
@@ -166,7 +130,7 @@ void OrderManager::displayOrdersByPriority(const std::string& filename, ClientOr
     }
     file.close();
 
-    // Sort orders by their order of placement 
+    // Sort orders by their order of placement
     std::sort(orders.begin(), orders.end(), [](const ClientOrder& a, const ClientOrder& b) {
         return a.getId() < b.getId();
     });
@@ -214,64 +178,4 @@ void OrderManager::cancelOrder(const std::string& filename, int orderId)
 
     std::cout << "Order canceled successfully." << std::endl;
 }
-
-int main(int argc, char* argv[])
-{
-    OrderManager orderManager;
-
-    // Checks if the correct number of command-line arguments is provided
-    if (argc != 3) {
-        std::cerr << "Usage: ./OrderManager cfg_ohm.txt orders.txt\n";
-        return 1;
-    }
-
-    std::string cfgOhmPath = "data/" + std::string(argv[1]);
-    std::string ordersPath = "data/" + std::string(argv[2]);
-
-    // Use cfgOhmPath and ordersPath in your code as needed
-
-    int choice;
-    do
-    {
-        std::cout << "1. Add new order" << std::endl;
-        std::cout << "2. Display orders" << std::endl;
-        std::cout << "3. Display orders by priority" << std::endl;
-        std::cout << "4. Cancel order" << std::endl;
-        std::cout << "5. Quit" << std::endl;
-        std::cout << "Enter your choice: ";
-        std::cin >> choice;
-
-        switch (choice)
-        {
-            case 1:
-                orderManager.addOrder(ordersPath);
-                break;
-            case 2:
-                orderManager.displayOrders(ordersPath);
-                break;
-            case 3:
-                ClientOrder::Priority priorityChoice;
-                std::cout << "Enter priority (1 for HIGH, 2 for NORMAL): ";
-                std::cin >> priorityChoice;
-                orderManager.displayOrdersByPriority(ordersPath, priorityChoice);
-                break;
-            case 4:
-                int orderId;
-                std::cout << "Enter order ID to cancel: ";
-                std::cin >> orderId;
-                orderManager.cancelOrder(ordersPath, orderId);
-                break;
-            case 5:
-                std::cout << "Goodbye!" << std::endl;
-                break;
-            default:
-                std::cout << "Invalid choice. Please try again." << std::endl;
-        }
-
-        std::cout << std::endl;
-
-    } while (choice != 5);
-
-    return 0;
-}
-
+// */

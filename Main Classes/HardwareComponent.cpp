@@ -23,6 +23,10 @@ const Board &HardwareComponent::getBoard() const
 {
     return this->board;
 }
+void HardwareComponent::setBoard(Board board)
+{
+  this->board = board;
+}
 HardwareComponent *HardwareComponent::getById(const std::string &requiredID)
 {
     if (this->id == requiredID)

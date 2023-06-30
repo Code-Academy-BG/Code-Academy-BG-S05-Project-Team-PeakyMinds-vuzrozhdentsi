@@ -25,6 +25,7 @@ public:
     std::vector<ElectronicComponent> getComponents() const;
     std::vector<ElectronicConnection> getConnections() const;
     const Board & getBoard() const;
+    void setBoard(Board board);
     HardwareComponent * getById(const std::string & id);
     void addElectronicComponent(ElectronicComponent e, Point p, int rotationQuadrant);  
     void addConnection(ElectronicComponent e1,Pin p1, ElectronicComponent e2, Pin p2);

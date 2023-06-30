@@ -13,8 +13,9 @@ class HardwarePrinterManager
 	std::vector<u8> matrixMask;
 	std::vector<PrinterJob> getComponentRequests();
 	void getHardwareComponentModel(const std::string& hardwareComponentModel);
-	Board cutBoardToFitHardwareComponent(HardwareComponent hardwareComponent);
+	void cutBoardToFitHardwareComponent(HardwareComponent& hardwareComponent);
 	void printConnectionsBetweenPins(HardwareComponent hardwareComponent);
+	void printComponentsMask(HardwareComponent& HardwareComponent);
 	void removeOrderFromPrintJobs(HardwareComponent hardwareComponent);
 	void addNewProductToProduction(HardwareComponent hardwareComponent);
     void runASAPMLBit();

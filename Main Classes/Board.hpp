@@ -16,6 +16,8 @@ class Board
     Board(std::string id ="", int height = 0, int width = 0);
     int getHeight() const;
     int getWidth() const;
+    void setHeight(int height);
+    void setWidth(int width);
     std::string getId() const;
     std::string serialize() const;
     Board deserialize(std::stringstream & strm);
