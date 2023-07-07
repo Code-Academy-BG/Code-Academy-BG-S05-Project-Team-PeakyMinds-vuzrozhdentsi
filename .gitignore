@@ -3,6 +3,7 @@
 .vscode/settings.json
 .vscode/tasks.json
 .vs/*.*
+.vs\*.*
 # Prerequisites
 *.d
 
@@ -36,4 +37,5 @@
 *.out
 *.app
 .vscode/tasks.json
+.vscode\tasks.json
 

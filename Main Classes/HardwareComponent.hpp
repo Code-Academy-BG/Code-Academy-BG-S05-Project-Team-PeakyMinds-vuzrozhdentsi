@@ -23,35 +23,41 @@ public:
     using PinContainer = std::vector<PinFactoryType>;
     using ElectronicComponentFactoryType = ElectronicComponentFactory::FactoryType;
     using ElectronicComponentContainer = std::vector<ElectronicComponentFactoryType>;
+    using ElectronicConnectionsContainer = std::vector<ElectronicConnection>;
 private:
     static BoardFactory boardFactory;
     static ElectronicComponentFactory ecFactory;
+    static const std::string NO_SUCH_ELECTRONIC_COMPONENT_ERROR;
     HCID id;
     Board board;
     ElectronicComponentContainer components;
-    std::vector<ElectronicConnection> connections;
+    ElectronicConnectionsContainer connections;
 
 public:
     HardwareComponent();
-    HardwareComponent(HCID id, Board board, ElectronicComponentContainer components, std::vector<ElectronicConnection> connections);
+    HardwareComponent(HCID id, Board board, ElectronicComponentContainer components, ElectronicConnectionsContainer connections);
+    HardwareComponent(std::istream& stream)
+    {
+        stream >> *this;
+    };
     HCID getId() const;
     ElectronicComponentContainer getComponents() const;
-    std::vector<ElectronicConnection> getConnections() const;
+    ElectronicConnectionsContainer getConnections() const;
     const Board & getBoard() const;
-    void setBoard(Board board);
-    HardwareComponent * getById(const std::string & id);
-    void addElectronicComponent(ElectronicComponent* e, Point* p, int rotationQuadrant);  
-    void addConnection(ElectronicComponent e1,Pin p1, ElectronicComponent e2, Pin p2);
-    bool equals (const HardwareComponent & h);
+    const ElectronicComponent & getElectronicComponentByBoardNumber(int wanted);
+    // void setBoard(Board board);
+
+    // TODO review
     std::string toDecsriptionFormatSting();
+
+    // TODO review
     std::string toMachineLevelFormatSting();
+    
     // std::string toVisualLevelSting();
-    std::string serialize();
-    HardwareComponent deserialize(std::stringstream & strm);
-    friend bool operator<(const HardwareComponent & h1,const HardwareComponent & h2);
-    friend bool operator==(const HardwareComponent & h1,const HardwareComponent & h2);
-    friend bool operator!=(const HardwareComponent & h1,const HardwareComponent & h2);
-    //const Board &getBoard() const;
+    // std::string serialize();
+    // HardwareComponent deserialize(std::stringstream & strm);
+
+    const Board &getBoard() const;
     //HardwareComponent *getById(const std::string &id);
     /* void addElectronicComponent(ElectronicComponent e, Point p, int rotationQuadrant)
     {
@@ -68,8 +74,19 @@ public:
     // std::string toVisualLevelSting();
     // std::string serialize();
     // HardwareComponent * deserialize(const std::string & line);
+    
+    //compares IDs, used for set container 
     friend bool operator<(const HardwareComponent &h1, const HardwareComponent &h2);
+
+    // compares physical requirements, not IDs
     friend bool operator==(const HardwareComponent &h1, const HardwareComponent &h2);
+    
+    // compares physical requirements, not IDs
     friend bool operator!=(const HardwareComponent &h1, const HardwareComponent &h2);
+   
+    friend std::ostream& operator<<(std::ostream & stream, const HardwareComponent& hc);
+   
+    friend std::istream& operator>>(std::istream & stream, HardwareComponent& hc);
 };
 #endif
+

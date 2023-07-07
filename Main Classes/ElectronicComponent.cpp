@@ -1,7 +1,7 @@
 #include "ElectronicComponent.hpp"
 #include <string>
 #include <vector>
-     PinFactory ElectronicComponent::pinFactory {};
+const std::string ElectronicComponent::NO_SUCH_PIN_ERROR {"There is no such pin"};
 int ElectronicComponent::getRotation() const
 {
     switch (this->rotation)
@@ -42,25 +42,18 @@ ElectronicComponent::Rotation ElectronicComponent::getRotationByQuadrant(int x) 
     // Exception to be thrown
     }
 }
-Pin* ElectronicComponent:: getPinById(int wantedId)
+Pin& ElectronicComponent:: getPinById(int wantedId)
 {
-    for (auto & pointerToPin: getPins())
+    for (auto & pin: getPins())
     {
-        if ((*pointerToPin).getId() == wantedId)
+        if (pin.getId() == wantedId)
         {
-            return pointerToPin.get();
+            return pin;
         }
     }
-    return nullptr;
+    throw std::invalid_argument(NO_SUCH_PIN_ERROR);
 }
-ElectronicComponent* ElectronicComponent::getElectronicComponentByBoardNumber(int wantedBoardNumber)
-{
-    if (wantedBoardNumber == getBoardOrderNumber())
-    {
-        return this;
-    }
-    return nullptr;
-}
+
 void ElectronicComponent::setRotation(int quadrantNumber)
 {
     switch (quadrantNumber)
@@ -87,19 +80,17 @@ void ElectronicComponent::setStartingPosition(Point point)
     int yValDifference{0};
     xValDifference = point.getX() - this->getStartingPosition().getX();
     yValDifference = point.getY() - this->getStartingPosition().getY();
-    for (auto & pointerToPin : getPins())
+    for (auto & pin : getPins())
     {
         int newX{0}, newY{0};
-        newX = (*pointerToPin).getPoint().getX() + xValDifference;
-        newY = (*pointerToPin).getPoint().getY() + yValDifference;
-        Pin p{(*pointerToPin).getId(), newX, newY};
-        pointerToPin = pinFactory.getInstancePointer(p);
+        newX = pin.getPoint().getX() + xValDifference;
+        newY = pin.getPoint().getY() + yValDifference;
+        Pin p{pin.getId(), newX, newY};
+        pin = p;
     }
-    startingPosition = Pin::factory.getInstancePointer(point);
+    startingPosition = point;
 }
-/* void ElectronicComponent::rotate(int x)
-{
-} */
+
 std::string ElectronicComponent::toString()
 {
     std::string result{""};
@@ -110,9 +101,9 @@ std::string ElectronicComponent::toDecsriptionFormatSting()
 {
     std::string result{""};
     result.append("id: ").append(getId()).append("\n").append("width: ").append(std::to_string(getWidth())).append("\n").append("height: ").append(std::to_string(getHeight())).append("\n").append("pins: ");
-    for (auto & pointerToPin : getPins())
+    for (auto & pin : getPins())
     {
-        result.append((*pointerToPin).toString()).append(",");
+        result.append(pin.toString()).append(",");
     }
     result.pop_back();
     return result;
@@ -121,17 +112,17 @@ std::string ElectronicComponent::toMachineLevelFormatSting()
 {
     std::string result{""};
     result.append(getId()).append(": ").append(widthAndHeightToMachineLevelFormat());
-    for (auto & pointerToPin : getPins())
+    for (auto & pin : getPins())
     {
-        result.append((*pointerToPin).toMachineLevelFormatString()).append(" ");
+        result.append(pin.toMachineLevelFormatString()).append(" ");
     }
     return result;
 }
-std::string ElectronicComponent::toVisualLevelSting()
-{
-    std::string result{""};
-    return result;
-}
+// std::string ElectronicComponent::toVisualLevelSting()
+// {
+//     std::string result{""};
+//     return result;
+// }
 std::string ElectronicComponent::widthAndHeightToMachineLevelFormat(int bits)
 {
     unsigned long res{0};
@@ -140,83 +131,59 @@ std::string ElectronicComponent::widthAndHeightToMachineLevelFormat(int bits)
     res |= this->getWidth();
     return std::to_string(res);
 }
-std::string ElectronicComponent::serialize() const
-{
-    std::string result{""};
-    result.append(getId()).append(" ").append(std::to_string(getHeight())).append(" ").append(std::to_string(getWidth()))
-    .append(" ").append(std::to_string(getBoardOrderNumber())).append(" ").append(std::to_string(getRotation()))
-    .append(" ").append((*startingPosition).serialize()).append(" ").append(std::to_string(getPins().size())).append(" ");
-    for (auto & pointerToPin : getPins())
-    {
-        result.append((*pointerToPin).serialize()).append(" ");
-    }
-    return result;
-}
-ElectronicComponent ElectronicComponent::deserialize(std::stringstream & strm)
-{
-    std::string newId{""};
-    std::string temp{""};
-    int newHeight{0};
-    int newWidth{0};
-    int newBoardOrderNumber{0};
-    ElectronicComponent::Rotation newRotation;
-    Point newStartingPosition;
-    int numberOfPins{0};
-    std::vector<Pin> newPins;
-    strm>>newId>>temp;
-    newHeight = std::stoi(temp);
-    temp.clear();
-    strm>>temp;
-    newWidth= std::stoi(temp);
-    temp.clear();
-    strm>>temp;
-    newBoardOrderNumber= std::stoi(temp);
-    temp.clear();
-    strm>>temp;
-    newRotation = getRotationByQuadrant(std::stoi(temp));
-    temp.clear();
-    strm>>temp;
-    newStartingPosition = newStartingPosition.deserialize(strm);
-    numberOfPins = std::stoi(temp);
-    
-    for (size_t i = 0; i < numberOfPins; i++)
-    {
-        Pin p;
-        p = p.deserialize(strm);
-        newPins.push_back(p);
-    }
-    
-    ElectronicComponent result{newId, newHeight, newWidth, newBoardOrderNumber, newStartingPosition, newRotation, pins};
-    return result;
-}
+// std::string ElectronicComponent::serialize() const
+// {
+//     std::string result{""};
+//     result.append(getId()).append(" ").append(std::to_string(getHeight())).append(" ").append(std::to_string(getWidth()))
+//     .append(" ").append(std::to_string(getBoardOrderNumber())).append(" ").append(std::to_string(getRotation()))
+//     .append(" ").append((*startingPosition).serialize()).append(" ").append(std::to_string(getPins().size())).append(" ");
+//     for (auto & pointerToPin : getPins())
+//     {
+//         result.append((*pointerToPin).serialize()).append(" ");
+//     }
+//     return result;
+// }
+// ElectronicComponent ElectronicComponent::deserialize(std::stringstream & strm)
+// {
+//     std::string newId{""};
+//     std::string temp{""};
+//     int newHeight{0};
+//     int newWidth{0};
+//     int newBoardOrderNumber{0};
+//     ElectronicComponent::Rotation newRotation;
+//     Point newStartingPosition;
+//     int numberOfPins{0};
+//     std::vector<Pin> newPins;
+//     strm>>newId>>temp;
+//     newHeight = std::stoi(temp);
+//     temp.clear();
+//     strm>>temp;
+//     newWidth= std::stoi(temp);
+//     temp.clear();
+//     strm>>temp;
+//     newBoardOrderNumber= std::stoi(temp);
+//     temp.clear();
+//     strm>>temp;
+//     newRotation = getRotationByQuadrant(std::stoi(temp));
+//     temp.clear();
+//     strm>>temp;
+//     newStartingPosition = newStartingPosition.deserialize(strm);
+//     numberOfPins = std::stoi(temp);   
+//     for (size_t i = 0; i < numberOfPins; i++)
+//     {
+//         Pin p;
+//         p = p.deserialize(strm);
+//         newPins.push_back(p);
+//     }  
+//     ElectronicComponent result{newId, newHeight, newWidth, newBoardOrderNumber, newStartingPosition, newRotation, pins};
+//     return result;
+// }
 
 bool operator<(const ElectronicComponent &e1, const ElectronicComponent &e2)
 {
-    ElectronicComponent::PinContainer e1SortedPins = e1.getPins();
-    ElectronicComponent::PinContainer e2SortedPins = e2.getPins();
-    std::sort(e1SortedPins.begin(), e1SortedPins.end());
-    std::sort(e2SortedPins.begin(), e2SortedPins.end());
-
-    if ((e1.getHeight() < e2.getHeight() && e1.getWidth() < e2.getWidth()) || (e1.getHeight() * e1.getWidth() < e2.getHeight() * e2.getWidth()))
-    {
-        return true;
-    }
-    else
-    {
-        if (e1SortedPins.size() < e2SortedPins.size())
-        {
-            return true;
-        }
-        else
-        {
-            if (e1SortedPins < e2SortedPins)
-            {
-                return true;
-            }
-        }
-    }
-    return false;
+    return e1.getId() < e2.getId();
 }
+
 bool operator==(const ElectronicComponent &e1, const ElectronicComponent &e2)
 {
     if (e1.getPins().size() != e2.getPins().size())
@@ -229,7 +196,33 @@ bool operator==(const ElectronicComponent &e1, const ElectronicComponent &e2)
     std::sort(e2SortedPins.begin(), e2SortedPins.end());
     return e1.getHeight() == e2.getHeight() && e1.getWidth() == e2.getWidth() && e1SortedPins == e2SortedPins;
 }
+
 bool operator!=(const ElectronicComponent &e1, const ElectronicComponent &e2)
 {
     return !(e1 == e2);
+}
+
+std::istream& operator>>(std::istream& stream, ElectronicComponent & ec)
+{
+    int rotationInt{0};
+    int numberOfPins{0};
+    stream >> ec.id >> ec.width >> ec.height >> ec.boardOrderNumber >> rotationInt >> ec.startingPosition >> numberOfPins;
+    ec.setRotation(rotationInt);
+    for (size_t i = 0; i < numberOfPins; i++)
+    {
+        ec.pins.emplace_back(Pin(stream));
+    } 
+    return stream;
+}
+
+std::ostream& operator<<(std::ostream& stream, const ElectronicComponent & ec)
+{
+    stream << ec.id << ' ' << ec.width << ' ' << ec.height << ' ' << ec.boardOrderNumber << ' '  
+        << ec.getRotation() << ' ' << ec.startingPosition << ' ' << ec.pins.size() << ' ';
+    for (size_t i = 0; i < ec.pins.size(); i++)
+    {
+        stream << ec.pins[i] << ' ';
+    }
+    stream << '\n';
+    return stream;
 }

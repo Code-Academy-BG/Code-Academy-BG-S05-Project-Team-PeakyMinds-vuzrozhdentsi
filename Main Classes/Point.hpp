@@ -14,9 +14,11 @@ private:
     int y;
 
 public:
-    Point(int xVal = 0, int yVal = 0) : x(xVal), y(yVal)
+    Point(): x{0},y{0}{};
+    Point(int xVal, int yVal) : x(xVal), y(yVal)
     {
     }
+    Point(std::istream & stream) { stream >> *this;}
     int getX() const
     {
         return this->x;
@@ -54,26 +56,25 @@ public:
         res |= this->y;
         return std::to_string(res);
     }
-    std::string serialize() const
-    {
-        std::string result{""};
-        result.append(std::to_string(getX())).append(" ").append(std::to_string(getY()));
-        return result;
-    }
-    Point deserialize(std::stringstream & strm)
-    {
+    // std::string serialize() const
+    // {
+    //     std::string result{""};
+    //     result.append(std::to_string(getX())).append(" ").append(std::to_string(getY()));
+    //     return result;
+    // }
+    // Point deserialize(std::stringstream & strm)
+    // {
         
-        std::string lineX{0}, lineY{0};
-        Point p;
-        strm>>lineX >> lineY;
-        p.set(std::stoi(lineX), std::stoi(lineY));
-        return p;
-    }
+    //     std::string lineX{0}, lineY{0};
+    //     Point p;
+    //     strm>>lineX >> lineY;
+    //     p.set(std::stoi(lineX), std::stoi(lineY));
+    //     return p;
+    // }
     friend bool operator<(const Point & p1, const Point & p2)
     {
-        return (p1.x < p2.x && p1.y < p2.y)
-            || (p1.x < p2.x && p1.y == p2.y)
-            || (p1.x == p2.x && p1.y < p2.y);
+        return (p1.x < p2.x && p1.y <= p2.y)
+            || (p1.x <= p2.x && p1.y < p2.y);
     }
     friend bool operator==(const Point & p1, const Point & p2)
     {
@@ -82,6 +83,16 @@ public:
     friend bool operator!=(const Point & p1, const Point & p2)
     {
         return !(p1==p2);
+    }
+    friend std::ostream& operator<<(std::ostream & stream, const Point& p)
+    {
+            stream<<p.x<<' '<<p.y<<' ';
+            return stream;
+    }
+    friend std::istream& operator>>(std::istream & stream, Point& p)
+    {
+        stream >> p.x>>p.y;
+        return stream;
     }
 };
 #endif

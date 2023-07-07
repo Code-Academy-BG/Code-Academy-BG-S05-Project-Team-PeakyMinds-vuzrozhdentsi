@@ -1,10 +1,11 @@
 #include "HardwareComponent.hpp"
+const std::string HardwareComponent::NO_SUCH_ELECTRONIC_COMPONENT_ERROR{"There is no such electronic component"};
 BoardFactory HardwareComponent:: boardFactory{};
 ElectronicComponentFactory HardwareComponent:: ecFactory{};
 HardwareComponent::HardwareComponent() : id{""}
 {
 }
-HardwareComponent::HardwareComponent(std::string id, Board board, ElectronicComponentContainer components, std::vector<ElectronicConnection> connections) :
+HardwareComponent::HardwareComponent(std::string id, Board board, ElectronicComponentContainer components, ElectronicConnectionsContainer connections) :
 id{id}, board{boardFactory.getInstance(board)}, components{components}, connections{connections}
 {
 }
@@ -16,7 +17,7 @@ HardwareComponent::ElectronicComponentContainer HardwareComponent::getComponents
 {
     return this->components;
 }
-std::vector<ElectronicConnection> HardwareComponent::getConnections() const
+HardwareComponent::ElectronicConnectionsContainer HardwareComponent::getConnections() const
 {
     return this->connections;
 }
@@ -24,37 +25,23 @@ const Board &HardwareComponent::getBoard() const
 {
     return this->board;
 }
-void HardwareComponent::setBoard(Board board)
+const ElectronicComponent & HardwareComponent::getElectronicComponentByBoardNumber(int wanted)
 {
-  this->board = board;
-}
-HardwareComponent *HardwareComponent::getById(const std::string &requiredID)
-{
-    if (this->id == requiredID)
+     for (auto & ec: getComponents())
     {
-        return this;
+        if ((*ec.get()).getBoardOrderNumber() == wanted)
+        {
+            return *ec.get();
+        }
     }
-    return nullptr;
+    throw std::invalid_argument(NO_SUCH_ELECTRONIC_COMPONENT_ERROR);
 }
- void HardwareComponent::addElectronicComponent(ElectronicComponent* e, Point* p, int rotationQuadrant)
-{
-     (*e).rotate(rotationQuadrant);
-    // if empty size is 0, so 1 is added prior changing the size
-    (*e).setBoardOrderNumber(this->getComponents().size() + 1);
-    //... imprints the EC on the Board
-    (*e).setStartingPosition(*p);
-    //TODO - Add to Components Vector!
-}
-void HardwareComponent::addConnection(ElectronicComponent e1,Pin p1, ElectronicComponent e2, Pin p2)
-{
-    ElectronicConnection connection {e1, p1, e2, p2};
-    getConnections().push_back(connection);
-}
+// void HardwareComponent::setBoard(Board board)
+// {
+//   this->board = board;
+// }
 
-bool HardwareComponent::equals(const HardwareComponent &h)
-{
-    return *this == h;
-}
+
 std::string HardwareComponent::toDecsriptionFormatSting()
 {
     std::string result{""};
@@ -111,79 +98,58 @@ std::string HardwareComponent::toMachineLevelFormatSting()
 
     return result;
 }
-// std::string HardwareComponent::toVisualLevelSting()
+
+// std::string HardwareComponent::serialize()
 // {
+//     std::string result{""};
+//     result.append(getId()).append(" ").append(getBoard().serialize()).append(" ").append(std::to_string(getComponents().size()));
+//     for (HardwareComponent::ElectronicComponentFactoryType & c : getComponents())
+//     {
+//         result.append((*c).serialize()).append(" ");
+//     }
+//     result.append(std::to_string(getConnections().size())).append(" ");
+//     for (ElectronicConnection connection : getConnections())
+//     {
+//         //result.append(connection.serialize()).append(" ");
+//     }
+//     return result;
 // }
-std::string HardwareComponent::serialize()
-{
-    std::string result{""};
-    result.append(getId()).append(" ").append(getBoard().serialize()).append(" ").append(std::to_string(getComponents().size()));
-    for (HardwareComponent::ElectronicComponentFactoryType & c : getComponents())
-    {
-        result.append((*c).serialize()).append(" ");
-    }
-    result.append(std::to_string(getConnections().size())).append(" ");
-    for (ElectronicConnection connection : getConnections())
-    {
-        //result.append(connection.serialize()).append(" ");
-    }
-    return result;
-}
-HardwareComponent HardwareComponent::deserialize(std::stringstream & strm)
-{
-    std::string newId{""};
-    Board b;
-    int numberOfComponents{0};
-    HardwareComponent::ElectronicComponentContainer newComponents;
-    int numberOfConnections{0};
-    std::vector<ElectronicConnection> newConnections;
-    strm>>newId;
-    b = b.deserialize(strm);
-    b = boardFactory.getInstance(b);
-    for (size_t i = 0; i < numberOfComponents; i++)
-    {
-        ElectronicComponent eComp;
-        eComp = eComp.deserialize(strm);
-        newComponents.push_back(ecFactory.getInstancePointer(eComp));
-    }
+// HardwareComponent HardwareComponent::deserialize(std::stringstream & strm)
+// {
+//     std::string newId{""};
+//     Board b;
+//     int numberOfComponents{0};
+//     HardwareComponent::ElectronicComponentContainer newComponents;
+//     int numberOfConnections{0};
+//     std::vector<ElectronicConnection> newConnections;
+//     strm>>newId;
+//     b = b.deserialize(strm);
+//     b = boardFactory.getInstance(b);
+//     for (size_t i = 0; i < numberOfComponents; i++)
+//     {
+//         ElectronicComponent eComp;
+//         eComp = eComp.deserialize(strm);
+//         newComponents.push_back(ecFactory.getInstancePointer(eComp));
+//     }
     
-    for (size_t i = 0; i < numberOfConnections; i++)
-    {
-        ElectronicConnection eConn;
-        //eConn = eConn.deserialize(strm);
-        newConnections.push_back(eConn);
-    }
+//     for (size_t i = 0; i < numberOfConnections; i++)
+//     {
+//         ElectronicConnection eConn;
+//         //eConn = eConn.deserialize(strm);
+//         newConnections.push_back(eConn);
+//     }
 
-    HardwareComponent result{newId, b, newComponents, newConnections};
-    return result;
+//     HardwareComponent result{newId, b, newComponents, newConnections};
+//     return result;
 
-}
+// }
+
+
 bool operator<(const HardwareComponent &h1, const HardwareComponent &h2) 
 {
-    HardwareComponent::ElectronicComponentContainer  h1SortedComponents = h1.getComponents();
-    HardwareComponent::ElectronicComponentContainer  h2SortedComponents = h2.getComponents();
-    std::vector <ElectronicConnection> h1SortedConnections = h1.getConnections();
-    std::vector <ElectronicConnection> h2SortedConnections = h2.getConnections();
-    if (h1.getBoard() < h2.getBoard())
-    {
-        return true;
-    }
-    else if (h1.getBoard() == h2.getBoard())
-    {
-        if (h1SortedComponents.size() < h2SortedComponents.size())
-        {
-            return true;
-        }
-        else if (h1SortedComponents.size() == h2SortedComponents.size())
-        {
-            if (h2SortedConnections.size() < h2SortedConnections.size())
-            {
-                return true;
-            }
-        }
-    }
-    return false;
+    return h1.getId() < h2.getId();
 }
+
 bool operator==(const HardwareComponent &h1, const HardwareComponent &h2)
 {
     if (h1.getComponents().size() != h2.getComponents().size() 
@@ -193,8 +159,8 @@ bool operator==(const HardwareComponent &h1, const HardwareComponent &h2)
     }
     HardwareComponent::ElectronicComponentContainer  h1SortedComponents = h1.getComponents();
     HardwareComponent::ElectronicComponentContainer  h2SortedComponents = h2.getComponents();
-    std::vector <ElectronicConnection> h1SortedConnections = h1.getConnections();
-    std::vector <ElectronicConnection> h2SortedConnections = h2.getConnections();
+    HardwareComponent::ElectronicConnectionsContainer h1SortedConnections = h1.getConnections();
+    HardwareComponent::ElectronicConnectionsContainer h2SortedConnections = h2.getConnections();
     std::sort(h1SortedComponents.begin(),h1SortedComponents.end());
     std::sort(h2SortedComponents.begin(),h2SortedComponents.end());
     std::sort(h1SortedConnections.begin(),h1SortedConnections.end());
@@ -206,4 +172,39 @@ bool operator==(const HardwareComponent &h1, const HardwareComponent &h2)
 bool operator!=(const HardwareComponent &h1, const HardwareComponent &h2)
 {
     return !(h1 == h2);
+}
+
+std::ostream& operator<<(std::ostream & stream, const HardwareComponent& hc)
+{
+    stream << hc.id << ' ' << hc.board << ' ' << hc.components.size()  << ' ';
+    for (size_t i = 0; i < hc.components.size(); i++)
+    {
+        stream<< hc.components[i]  << ' ';
+    }
+    
+    stream << hc.connections.size() << ' ';
+
+    for (size_t i = 0; i < hc.connections.size(); i++)
+    {
+     stream << hc.connections[i] << ' ';
+    }
+    stream << '\n';
+    return stream;
+}
+std::istream& operator>>(std::istream & stream, HardwareComponent& hc)
+{
+    int containerSize{0};
+        stream >> hc.id >> hc.board >> containerSize ;
+    for (size_t i = 0; i < containerSize; i++)
+    {
+        hc.components.emplace_back(ElectronicComponent(stream));
+    }
+    
+    stream >> containerSize;
+
+    for (size_t i = 0; i < containerSize; i++)
+    {
+        hc.connections.emplace_back(ElectronicConnection(stream));
+    }
+    return stream;
 }
