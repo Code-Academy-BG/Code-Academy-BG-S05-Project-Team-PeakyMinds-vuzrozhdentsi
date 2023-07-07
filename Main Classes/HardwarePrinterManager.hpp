@@ -15,7 +15,8 @@ class HardwarePrinterManager
 	void getHardwareComponentModel(const std::string& hardwareComponentModel);
 	void cutBoardToFitHardwareComponent(HardwareComponent& hardwareComponent);
 	void printConnectionsBetweenPins(HardwareComponent hardwareComponent);
-	void printComponentsMask(HardwareComponent& HardwareComponent);
+	void printComponentsMask(HardwareComponent &HardwareComponent, std::vector<std::vector<char>>& matrixMask);
+	void printFinalResults(HardwareComponent &HardwareComponent, std::vector<std::vector<char>> &matrixMask);
 	void removeOrderFromPrintJobs(HardwareComponent hardwareComponent);
 	void addNewProductToProduction(HardwareComponent hardwareComponent);
     void runASAPMLBit();
