@@ -23,15 +23,15 @@ HardwareComponent::ElectronicConnectionsContainer HardwareComponent::getConnecti
 }
 const Board &HardwareComponent::getBoard() const
 {
-    return this->board;
+    return board;
 }
 const ElectronicComponent & HardwareComponent::getElectronicComponentByBoardNumber(int wanted)
 {
      for (auto & ec: getComponents())
     {
-        if ((*ec.get()).getBoardOrderNumber() == wanted)
+        if ((ec).getBoardOrderNumber() == wanted)
         {
-            return *ec.get();
+            return ec;
         }
     }
     throw std::invalid_argument(NO_SUCH_ELECTRONIC_COMPONENT_ERROR);
@@ -48,7 +48,7 @@ std::string HardwareComponent::toDecsriptionFormatSting()
     result.append("id: ").append(this->id).append("\n").append("width: ").append(std::to_string(this->getBoard().getWidth())).append("\n").append("height: ").append(std::to_string(this->getBoard().getHeight())).append("\n").append("components: ").append("\n");
     for (HardwareComponent::ElectronicComponentFactoryType & component : getComponents())
     {
-        result.append((*component).toString()).append("\n");
+        result.append((component).toString()).append("\n");
     }
     result.append("connections: ");
     for (ElectronicConnection & connection : getConnections())
@@ -73,10 +73,10 @@ std::string HardwareComponent::toMachineLevelFormatSting()
         pair.second = stringRepresentation;
         for (HardwareComponent::ElectronicComponentFactoryType & component : getComponents())
         {
-            componentStringMap[(*component).getId()] = pair;
-            componentStringMap[(*component).getId()].first++;
-            componentStringMap[(*component).getId()].second.append((*component).getStartingPosition().toMachineLevelFormatString())
-                                                        .append(" ").append(std::to_string((*component).getRotation()));
+            componentStringMap[(component).getId()] = pair;
+            componentStringMap[(component).getId()].first++;
+            componentStringMap[(component).getId()].second.append((component).getStartingPosition().toMachineLevelFormatString())
+                                                        .append(" ").append(std::to_string((component).getRotation()));
         }
 
         // adding the mapping to the final result, first component ID, then the amount in the hardware component and for each starting position and rotation

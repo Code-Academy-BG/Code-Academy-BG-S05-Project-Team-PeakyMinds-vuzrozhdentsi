@@ -1,9 +1,10 @@
 #include "ClientOrder.hpp"
 
-const std::string ClientOrder::NO_SUCH_STATUS_ERROR {"There is no such status"};
-const std::string ClientOrder::NO_SUCH_PRIORITY_ERROR {"There is no such priority"};
+const std::string ClientOrder::NO_SUCH_STATUS_ERROR ="There is no such status";
+const std::string ClientOrder::NO_SUCH_PRIORITY_ERROR ="There is no such priority";
 
-int ClientOrder::getId() const {
+int ClientOrder::getId() const
+{
     return id;
 }
 
@@ -30,6 +31,7 @@ void ClientOrder::setId(int orderId) {
 void ClientOrder::setStatus(Status orderStatus) {
     status = orderStatus;
 }
+
 void ClientOrder::setStatus(int orderStatus) {
     switch (orderStatus)
     {
@@ -50,9 +52,11 @@ void ClientOrder::setStatus(int orderStatus) {
         break;
     }
 }
+
 void ClientOrder::setPriority(Priority orderPriority) {
     priority = orderPriority;
 }
+
 void ClientOrder::setPriority(int orderPriority) {
     switch (orderPriority)
     {
@@ -67,6 +71,7 @@ void ClientOrder::setPriority(int orderPriority) {
         break;
     }
 }
+
 void ClientOrder::setHardwareComponents(const std::vector<HardwareComponentID>& components) {
     hardwareComponents = components;
 }
@@ -74,14 +79,17 @@ void ClientOrder::setHardwareComponents(const std::vector<HardwareComponentID>& 
 void ClientOrder::setElectronicComponents(const std::vector<ElectronicComponentID>& components) {
     electronicComponents = components;
 }
+
 std::vector<ElectronicComponent> ClientOrder::getElectronicComponentsWithDesign() const
 {
     return this->newElectronicComponentsWithDesign;
 }
+
 std::vector<HardwareComponent> ClientOrder:: getHardwareComponentsWithDesign() const
 {
     return this->newHardwareComponentsWithDesign;
 }
+
 int ClientOrder::getStatusAsInt() const
 {
     switch (getStatus())
@@ -101,6 +109,7 @@ int ClientOrder::getStatusAsInt() const
     }
 
 }
+
 int ClientOrder::getPriorityAsInt() const
 {
     switch (getPriority())
@@ -113,6 +122,7 @@ int ClientOrder::getPriorityAsInt() const
         break;
     }
 }
+
 std::ostream& operator<<(std::ostream & stream, const ClientOrder& order)
 {
     stream<<order.getId()<<' ' <<  order.getPriorityAsInt() <<' '<< order.getStatusAsInt()<<' ' 
@@ -139,6 +149,7 @@ std::ostream& operator<<(std::ostream & stream, const ClientOrder& order)
     stream << '\n';
     return stream;
 }
+
 std::istream& operator>>(std::istream & stream, ClientOrder& order)
 {
     int hardwareComponentsSize{0};
@@ -177,3 +188,4 @@ std::istream& operator>>(std::istream & stream, ClientOrder& order)
     }
     return stream;
 }
+

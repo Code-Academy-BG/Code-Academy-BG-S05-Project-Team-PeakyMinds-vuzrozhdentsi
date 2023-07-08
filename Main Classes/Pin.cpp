@@ -43,6 +43,10 @@ bool operator==(const Pin & p1, const Pin & p2)
 {
     return p1.getPoint() == p2.getPoint();
 }
+bool operator<=(const Pin & p1, const Pin & p2)
+{
+    return p1.getPoint() == p2.getPoint() || p1.getPoint() < p2.getPoint();
+}
 bool operator!=(const Pin & p1, const Pin & p2)
 {
     return !(p1.getPoint() == p2.getPoint());

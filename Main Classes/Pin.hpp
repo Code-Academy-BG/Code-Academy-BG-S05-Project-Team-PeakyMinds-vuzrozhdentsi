@@ -38,6 +38,7 @@ public:
   // Pin deserialize(std::stringstream &strm);
   friend bool operator<(const Pin &p1, const Pin &p2);
   friend bool operator==(const Pin &p1, const Pin &p2);
+  friend bool operator<=(const Pin &p1, const Pin &p2);
   friend bool operator!=(const Pin &p1, const Pin &p2);
   friend std::ostream &operator<<(std::ostream &stream, const Pin &p)
   {
@@ -46,7 +47,7 @@ public:
   }
   friend std::istream &operator>>(std::istream &stream, Pin &p)
   {
-    //stream >> static_cast<idType>(p.id) >> p.point;
+    stream >> p.id >> p.point;
     return stream;
   }
 };

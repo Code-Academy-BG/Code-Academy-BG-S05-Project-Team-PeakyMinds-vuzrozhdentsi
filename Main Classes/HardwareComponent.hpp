@@ -15,13 +15,13 @@
 class HardwareComponent
 {
 public:
-    using PinFactoryRawMaterial = PinFactory::FactoryRawMaterial;
-    using PinFactoryType = PinFactory::FactoryType;
-    using PointFactoryRawMaterial = PointFactory::FactoryRawMaterial;
-    using PointFactoryType = PointFactory::FactoryType;
+    // using PinFactoryRawMaterial = PinFactory::FactoryRawMaterial;
+    // using PinFactoryType = PinFactory::FactoryType;
+    // using PointFactoryRawMaterial = PointFactory::FactoryRawMaterial;
+    // using PointFactoryType = PointFactory::FactoryType;
     using HCID = std::string;
-    using PinContainer = std::vector<PinFactoryType>;
-    using ElectronicComponentFactoryType = ElectronicComponentFactory::FactoryType;
+    // using PinContainer = std::vector<PinFactoryType>;
+    using ElectronicComponentFactoryType = ElectronicComponent; //ElectronicComponentFactory::FactoryType;
     using ElectronicComponentContainer = std::vector<ElectronicComponentFactoryType>;
     using ElectronicConnectionsContainer = std::vector<ElectronicConnection>;
 private:
@@ -57,7 +57,7 @@ public:
     // std::string serialize();
     // HardwareComponent deserialize(std::stringstream & strm);
 
-    //const Board &getBoard() const;
+
     //HardwareComponent *getById(const std::string &id);
     /* void addElectronicComponent(ElectronicComponent e, Point p, int rotationQuadrant)
     {

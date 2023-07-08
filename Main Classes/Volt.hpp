@@ -1,3 +1,6 @@
+#ifndef VOLT_HPP
+#define VOLT_HPP
+
 #include"FileManager.hpp"
 #include"HardwareComponent.hpp"
 #include "HardwareComponentManager.hpp"
@@ -74,3 +77,4 @@ public:
     ~Volt();
 };
 
+#endif

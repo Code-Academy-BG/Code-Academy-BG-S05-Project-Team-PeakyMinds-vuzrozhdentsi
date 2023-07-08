@@ -55,6 +55,10 @@ public:
     {
         return !(e1 == e2);
     }
+    friend bool operator<(const ElectronicConnection &e1, const ElectronicConnection &e2)
+    {
+        return e1.pinConnection.first < e2.pinConnection.first && e1.pinConnection.second <= e2.pinConnection.second;
+    }
     friend std::ostream &operator<<(std::ostream &stream, const ElectronicConnection &c)
     {
         stream << c.electronicComponentConnection.first << ' ' << c.electronicComponentConnection.second << ' '

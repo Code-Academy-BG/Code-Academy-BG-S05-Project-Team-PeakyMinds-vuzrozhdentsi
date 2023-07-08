@@ -1,6 +1,5 @@
 #include "Volt.hpp"
 
-Volt::Volt(){};
 const std::string Volt::PRINT_JOB_FILE = "print_jobs.txt";
 const std::string Volt::INVENTORY_FILE = "inventory.txt";
 const std::string Volt::CLIENT_ORDERS_FILE = "client_orders.txt";

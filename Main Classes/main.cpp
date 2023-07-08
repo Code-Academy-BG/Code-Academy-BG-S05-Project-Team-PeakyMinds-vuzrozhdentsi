@@ -1,4 +1,4 @@
-// #include "HardwareComponent.hpp"
+#include "HardwareComponent.hpp"
 #include "Board.hpp"
 #include "Point.hpp"
 #include "Pin.hpp"
@@ -9,7 +9,7 @@
 #include<vector>
 int main()
 {
-    HardwarePrinterManager hwp;
-    hwp.runASAPMLBit();
+    // HardwarePrinterManager hwp;
+    // hwp.runASAPMLBit();
     return 0;
 }
