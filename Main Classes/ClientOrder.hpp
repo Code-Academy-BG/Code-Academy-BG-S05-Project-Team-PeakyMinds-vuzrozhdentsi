@@ -59,4 +59,5 @@ public:
     friend std::ostream& operator<<(std::ostream & stream, const ClientOrder& order);
     friend std::istream& operator>>(std::istream & stream, ClientOrder& order);
 };
+
 #endif
