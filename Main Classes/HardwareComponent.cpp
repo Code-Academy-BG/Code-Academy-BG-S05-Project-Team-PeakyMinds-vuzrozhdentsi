@@ -193,7 +193,7 @@ std::ostream& operator<<(std::ostream & stream, const HardwareComponent& hc)
 }
 std::istream& operator>>(std::istream & stream, HardwareComponent& hc)
 {
-    int containerSize{0};
+    size_t containerSize{0};
         stream >> hc.id >> hc.board >> containerSize ;
     for (size_t i = 0; i < containerSize; i++)
     {

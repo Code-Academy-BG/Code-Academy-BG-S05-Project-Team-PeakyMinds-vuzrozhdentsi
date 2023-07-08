@@ -5,16 +5,26 @@ const std::string Volt::INVENTORY_FILE = "inventory.txt";
 const std::string Volt::CLIENT_ORDERS_FILE = "client_orders.txt";
 const std::string Volt::PRODUCTION_FILE = "production.txt";
 const std::string Volt::HISTORY_FILE = "history.txt";
-const std::string ELECTRONIC_COMPONENT_LIBRARY_FILE = "ElectronicComponentLibrary.txt";
-const std::string HARDWARE_COMPONENT_LIBRARY_FILE = "HardwareComponentLibrary.txt";
-const std::string HARDWARE_COMPONENT_FOR_PRINTING_MSG = "Current hardware components to be printed:\n";
-const std::string INVALID_CHOICE_ERROR = "Invalid choice";
-const std::string RUN_CHOICE_INSTRUCTIONS_MSG = "Press 0 for processing OR 1 for printing currently pending,\n anythingelse will end the program\n";
+const std::string Volt::ELECTRONIC_COMPONENT_LIBRARY_FILE = "ElectronicComponentLibrary.txt";
+const std::string Volt::HARDWARE_COMPONENT_LIBRARY_FILE = "HardwareComponentLibrary.txt";
+const std::string Volt::HARDWARE_COMPONENT_FOR_PRINTING_MSG = "Current hardware components to be printed:\n";
+const std::string Volt::INVALID_CHOICE_ERROR = "Invalid choice";
+const std::string Volt::RUN_CHOICE_INSTRUCTIONS_MSG = "Press 0 for processing OR 1 for printing currently pending,\n anythingelse will end the program\n";
 
 bool Volt::getLibraries()
 {
-    hcLibrary.load(HARDWARE_COMPONENT_LIBRARY_FILE);
-    ecLibrary.load(ELECTRONIC_COMPONENT_LIBRARY_FILE);
+    try
+    {
+        hcLibrary.load(HARDWARE_COMPONENT_LIBRARY_FILE);
+        ecLibrary.load(ELECTRONIC_COMPONENT_LIBRARY_FILE);
+        return true;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        return false;
+    }
+    
 }
 
 void Volt::getPendingRequestsForPrint()
@@ -65,10 +75,9 @@ void Volt::processingUnprocessedOrdersForPrinting(ClientOrder &order)
         for (auto &hComponent : order.getHardwareComponents())
         {
 
-            bool areAllElectronicComponentsTaken{true};
             for (auto &elComponent : hcLibrary.getHardwareComponent(hComponent).getComponents())
             {
-                auto &currentElComponentID = (*elComponent).getId();
+                const auto &currentElComponentID = (elComponent).getId();
                 if (electronicComponentsOnStock[currentElComponentID] > 0)
                 {
                     electronicComponentsOnStock[currentElComponentID]--;
@@ -76,7 +85,6 @@ void Volt::processingUnprocessedOrdersForPrinting(ClientOrder &order)
                 else
                 {
                     areAllHrdwareComponentsReadyForPrinting = false;
-                    areAllElectronicComponentsTaken = false;
                     electronicComponentsForAdditionalPurchasing[currentElComponentID]++;
                     pendingOrdersWithMissingComponents[order.getId()].push_back(currentElComponentID);
                 }
@@ -168,7 +176,7 @@ void Volt::updateProduction()
 {
     FileManager fm{PRODUCTION_FILE};
     std::for_each(pendingHardwareComponentsForPrinting.begin(), pendingHardwareComponentsForPrinting.end(),
-                  [&](std::pair<Volt::electronincComponentID, Volt::quantity> &p)
+                  [&](const std::pair<Volt::electronincComponentID, Volt::quantity> &p)
                   { fm.get() << p.first << ' ' << p.second << '\n'; });
 }
 
@@ -176,7 +184,7 @@ void Volt::updateInventory()
 {
     FileManager fm{INVENTORY_FILE};
     std::for_each(electronicComponentsOnStock.begin(), electronicComponentsOnStock.end(),
-                  [&](std::pair<Volt::electronincComponentID, Volt::quantity> &p)
+                  [&](const std::pair<Volt::electronincComponentID, Volt::quantity> &p)
                   { fm.get() << p.first << ' ' << '-' << p.second << '\n'; });
 }
 
@@ -184,7 +192,7 @@ void Volt::updatePendingRequestsForPrint()
 {
     FileManager fm{PRINT_JOB_FILE};
     std::for_each(pendingHardwareComponentsForPrinting.begin(), pendingHardwareComponentsForPrinting.end(),
-                  [&](std::pair<Volt::hardwareComponentID, Volt::quantity> &p)
+                  [&](const std::pair<Volt::hardwareComponentID, Volt::quantity> &p)
                   { fm.get() << p.first << ' ' << p.second << '\n'; });
 }
 
@@ -197,11 +205,11 @@ void Volt::updateHistory()
         currentHistory.emplace_back(ClientOrder(fm.get()));
     }
     std::for_each(currentHistory.begin(), currentHistory.end(),
-                  [&](ClientOrder &order)
+                  [&](const ClientOrder &order)
                   { fm.get() << order; });
 
     std::for_each(ordersForHistory.begin(), ordersForHistory.end(),
-                  [&](ClientOrder &order)
+                  [&](const ClientOrder &order)
                   { fm.get() << order; });
 }
 

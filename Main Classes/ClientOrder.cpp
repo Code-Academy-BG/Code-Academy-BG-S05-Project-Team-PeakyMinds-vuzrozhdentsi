@@ -107,7 +107,7 @@ int ClientOrder::getStatusAsInt() const
         return 4;
         break;
     }
-
+    throw std::invalid_argument(NO_SUCH_STATUS_ERROR);
 }
 
 int ClientOrder::getPriorityAsInt() const
@@ -121,6 +121,7 @@ int ClientOrder::getPriorityAsInt() const
         return 2;
         break;
     }
+    throw std::invalid_argument(NO_SUCH_PRIORITY_ERROR);
 }
 
 std::ostream& operator<<(std::ostream & stream, const ClientOrder& order)
@@ -152,8 +153,8 @@ std::ostream& operator<<(std::ostream & stream, const ClientOrder& order)
 
 std::istream& operator>>(std::istream & stream, ClientOrder& order)
 {
-    int hardwareComponentsSize{0};
-    int electronicComponentsSize{0};
+    size_t hardwareComponentsSize{0};
+    size_t electronicComponentsSize{0};
     int priorityInt{0};
     int statusInt{0};
     stream>> order.id >> priorityInt >> statusInt >> hardwareComponentsSize;

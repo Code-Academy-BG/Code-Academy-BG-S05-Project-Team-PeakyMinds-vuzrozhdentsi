@@ -34,7 +34,7 @@ public:
     {
         if (checkByName(wantedID))
         {
-            return *(std::find_if(librarySet.begin(), librarySet.end(), [&](const ElectronicComponent &hc)
+            return *(std::find_if(librarySet.begin(), librarySet.end(), [&](const HardwareComponent &hc)
                                   { return hc.getId() == wantedID; }));
         }
         throw std::invalid_argument(NO_SUCH_DESIGN);
@@ -61,7 +61,7 @@ public:
     }
     bool checkByName(const std::string &wantedID)
     {
-        return !(librarySet.end() == std::find_if(librarySet.begin(), librarySet.end(), [&](const ElectronicComponent &hc)
+        return !(librarySet.end() == std::find_if(librarySet.begin(), librarySet.end(), [&](const HardwareComponent &hc)
                                                   { return hc.getId() == wantedID; }));
     }
     const std::string &getHardwareComponentId(const std::string &wantedID)

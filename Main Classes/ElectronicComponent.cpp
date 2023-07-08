@@ -205,7 +205,7 @@ bool operator!=(const ElectronicComponent &e1, const ElectronicComponent &e2)
 std::istream& operator>>(std::istream& stream, ElectronicComponent & ec)
 {
     int rotationInt{0};
-    int numberOfPins{0};
+    size_t numberOfPins{0};
     stream >> ec.id >> ec.width >> ec.height >> ec.boardOrderNumber >> rotationInt >> ec.startingPosition >> numberOfPins;
     ec.setRotation(rotationInt);
     for (size_t i = 0; i < numberOfPins; i++)
