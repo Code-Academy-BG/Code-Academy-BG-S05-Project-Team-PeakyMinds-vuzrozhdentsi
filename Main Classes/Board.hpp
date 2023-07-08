@@ -10,11 +10,11 @@ class Board
     private:
     int width;
     int height;
-    //int id;
-    std::string id;
+    int id;
+    // std::string id;
 
     public:
-    Board(): width{0}, height{0}, id{""} {};
+    Board(): width{0}, height{0}, id{0} {};
     Board(int width, int height);
     Board(std::istream& stream)
     {
@@ -25,7 +25,7 @@ class Board
     void setHeight(int height);
     void setWidth(int width);
     int setId(int w, int h);
-    std::string getId() const;
+    int getId() const;
     //int getId() const;
     // std::string serialize() const;
     // Board deserialize(std::stringstream & strm);
