@@ -10,10 +10,10 @@ class Board
     private:
     int width;
     int height;
-    int id;
+    std::string id;
 
     public:
-    Board(): width{0}, height{0}, id{0} {};
+    Board(): width{0}, height{0}, id{""} {};
     Board(int width, int height);
     Board(std::istream& stream)
     {
@@ -24,7 +24,8 @@ class Board
     void setHeight(int height);
     void setWidth(int width);
     int setId(int w, int h);
-    int getId() const;
+    std::string getId() const;
+    //int getId() const;
     // std::string serialize() const;
     // Board deserialize(std::stringstream & strm);
     friend bool operator<(const Board & b1, const Board & b2);
