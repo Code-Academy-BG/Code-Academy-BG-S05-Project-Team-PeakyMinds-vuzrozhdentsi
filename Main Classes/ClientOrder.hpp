@@ -29,19 +29,22 @@ private:
     int id;
     Status status;
     Priority priority;
+    std::string clientName;
     std::vector<HardwareComponentID> hardwareComponents;
     std::vector<HardwareComponent> newHardwareComponentsWithDesign;
     std::vector<ElectronicComponentID> electronicComponents;
     std::vector<ElectronicComponent> newElectronicComponentsWithDesign;
 
 public:
-    ClientOrder(): id{0}, status{Status::UNPROCESSED} {};
+    ClientOrder(): id{0}, status{Status::UNPROCESSED}, priority{Priority::NORMAL}, clientName {""} {};
     ClientOrder(std::istream & stream)
     {
         stream >> *this;
     }
     int getId() const;
     void setId(int orderId);
+    const std::string getClientName() const;
+    void setClientName(const std::string & name);
     Status getStatus() const;
     int getStatusAsInt() const;
     void setStatus(Status orderStatus);
