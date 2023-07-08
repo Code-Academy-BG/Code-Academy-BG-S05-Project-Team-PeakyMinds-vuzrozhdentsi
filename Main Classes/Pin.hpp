@@ -46,7 +46,7 @@ public:
   }
   friend std::istream &operator>>(std::istream &stream, Pin &p)
   {
-    stream >> static_cast<idType>(p.id) >> p.point;
+    //stream >> static_cast<idType>(p.id) >> p.point;
     return stream;
   }
 };

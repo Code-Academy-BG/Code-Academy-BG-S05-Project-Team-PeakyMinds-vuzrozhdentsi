@@ -57,7 +57,7 @@ public:
     // std::string serialize();
     // HardwareComponent deserialize(std::stringstream & strm);
 
-    const Board &getBoard() const;
+    //const Board &getBoard() const;
     //HardwareComponent *getById(const std::string &id);
     /* void addElectronicComponent(ElectronicComponent e, Point p, int rotationQuadrant)
     {

@@ -1,0 +1,10 @@
+2N3904 0
+rezistor 0
+rezistor1 0
+rezistor2 0
+rezistor3 0
+rezistor4 0
+rezistor5 0
+rezistor6 0
+rezistor7 0
+rezistor8 0

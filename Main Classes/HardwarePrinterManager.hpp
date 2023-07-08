@@ -8,6 +8,8 @@
 typedef unsigned char u8;
 class HardwarePrinterManager
 {
+	private:
+	using ElectronicComponentContainer = HardwareComponent::ElectronicComponentContainer;
 
     public:
 	std::vector<u8> matrixMask;

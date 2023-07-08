@@ -52,7 +52,7 @@ std::vector<PrinterJob> HardwarePrinterManager::getComponentRequests()
    std::vector<PrinterJob> printerRequests;
    std::string word;
    std::string hardwareComponentModel;
-   FileManager fm;
+   FileManager fm("");
    fm.setFilename("print_jobs.txt");
    int countOfComponentsToPrint = 0;
     file.open("print_jobs.txt");
@@ -88,14 +88,15 @@ void HardwarePrinterManager::cutBoardToFitHardwareComponent(HardwareComponent& h
 {
   
    
-   Board board("board1", 16, 16);
+   //Board board("board1", 16, 16);
+   Board board(16, 16);
    std::cout << hardwareComponent.getId() << std::endl;
    board.printBoard();
   int height = 7;
   int width = 11;
   board.setHeight(7);
   board.setWidth(11);
-  hardwareComponent.setBoard(board);
+  //hardwareComponent.setBoard(board);
   std::cout << std::endl << "----------------- STEP 0: Cut board" << std::endl;
 
   HardwareComponentMeasuresInDecimal = get16BitBinNumInDecimal(height,width);
@@ -398,7 +399,8 @@ void HardwarePrinterManager::printFinalResults(HardwareComponent &HardwareCompon
 }
 void HardwarePrinterManager::runASAPMLBit()
 {
-   Board board("board1", 16, 16);
+   //Board board("board1", 16, 16);
+   Board board(16, 16);
    Point point(0,0);
    Point point2(8,0);
    Pin pin1(2, 1, 1);
@@ -414,8 +416,8 @@ void HardwarePrinterManager::runASAPMLBit()
    ec1.addPin(5, 1);
    ElectronicComponent ec2("2N3905", 3, 7, 1, point2);
    ec2.setRotation(2);
-   ElectronicConnection elconn(ec1, pin3, ec2, pin4);
-   ElectronicConnection elconn2(ec1, pin1, ec2, pin5);
+   //ElectronicConnection elconn(ec1, pin3, ec2, pin4);
+   //ElectronicConnection elconn2(ec1, pin1, ec2, pin5);
    /*
        ec.printElComp();
          ec.rotateThePins(90);
@@ -440,12 +442,12 @@ void HardwarePrinterManager::runASAPMLBit()
 
    components.push_back(ptr_ec1);
    components.push_back(ptr_ec2);
-   connections.push_back(elconn);
-   connections.push_back(elconn2);
+   //connections.push_back(elconn);
+   //connections.push_back(elconn2);
    HardwareComponent hc("id", board, components, connections);
    // hc.addElectronicComponent(ec1, point, 0);
    // hc.addElectronicComponent(ec2, point, 1);
-   hc.addConnection(ec1, pin3, ec2, pin4);
+   //hc.addConnection(ec1, pin3, ec2, pin4);
 
    // board.printBoard();
    /* std::cout<< '\n' << board.getHeight() << '\n';
