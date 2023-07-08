@@ -10,6 +10,7 @@ class Board
     private:
     int width;
     int height;
+    //int id;
     std::string id;
 
     public:
