@@ -1,274 +1,310 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <algorithm>
-#include <unordered_map>
-
-#include "ClientOrder.hpp"
 #include "OrderManager.hpp"
 
-// Stream operator overload for displaying a ClientOrder object
-std::ostream &operator<<(std::ostream &os, const ClientOrder &order)
+
+const std::string OrderManager::ORDERS_FILE = "orders.txt";
+
+std::string OrderManager::generateRandomId()
 {
-    os << "Order ID: " << order.getId() << std::endl;
+    // Generate a random number using <chrono> for the seed
+    auto currentTime = std::chrono::system_clock::now();
+    auto seed = currentTime.time_since_epoch().count();
+    std::default_random_engine generator(seed);
+    std::uniform_int_distribution<uint64_t> distribution(0, std::numeric_limits<uint64_t>::max());
+    uint64_t randomNumber = distribution(generator);
 
-    static const std::unordered_map<ClientOrder::Status, std::string> statusStrings = {
-        {ClientOrder::Status::UNPROCESSED, "UNPROCESSED"}};
+    // Convert the random number to hexadecimal format
+    std::string randomId = std::to_string(randomNumber);
+    randomId = "0x" + randomId; // Add "0x" prefix to indicate hexadecimal format
 
-    // Converting the status to string representation
-    const auto it = statusStrings.find(order.getStatus());
-    if (it != statusStrings.end())
-    {
-        os << "Status: " << it->second << std::endl;
-    }
-    else
-    {
-        os << "Status: Unknown" << std::endl;
-    }
-
-    os << "Priority: " << static_cast<int>(order.getPriority()) << std::endl;
-    os << "Hardware Components: ";
-    const std::vector<HardwareComponent> &hardwareComponents = order.getHardwareComponents();
-    for (const auto &component : hardwareComponents)
-    {
-        os << component.getId() << ", ";
-    }
-    os << std::endl;
-    os << "Electronic Components: ";
-    const std::vector<ElectronicComponent> &electronicComponents = order.getElectronicComponents();
-    for (const auto &component : electronicComponents)
-    {
-        os << component.getId() << ", ";
-    }
-    os << std::endl;
-
-    return os;
+    return randomId;
 }
 
-// Input stream operator overload for reading a ClientOrder::Priority object
-std::istream &operator>>(std::istream &is, ClientOrder::Priority &priority)
+void checkInput() // проверка за валидност на входа
 {
-    int priorityValue;
-    is >> priorityValue;
-    priority = static_cast<ClientOrder::Priority>(priorityValue);
-    return is;
-}
-
-// Inputing stream operator overload for reading a ClientOrder object
-std::istream &operator>>(std::istream &is, ClientOrder &order)
-{
-    int id;
-    int status;
-    int priority;
-    std::vector<HardwareComponent> hardwareComponents;
-    std::vector<ElectronicComponent> electronicComponents;
-
-    is >> id;
-    is >> status;
-    is >> priority;
-
-    order.setId(id);
-    order.setStatus(static_cast<ClientOrder::Status>(status));
-    order.setPriority(static_cast<ClientOrder::Priority>(priority));
-    order.setHardwareComponents(hardwareComponents);
-    order.setElectronicComponents(electronicComponents);
-
-    return is;
-}
-
-void OrderManager::addOrder(const std::string &filename)
-{
-    std::ofstream file(filename, std::ios::app);
-    if (!file)
+    if (std::cin.fail()) // if the previous extraction failed,
     {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return;
-    }
-
-    int id;
-    int orderStatus; // Changed variable name from "status" to "orderStatus"
-    int priority;
-    std::vector<HardwareComponent> hardwareComponents;
-    std::vector<ElectronicComponent> electronicComponents;
-
-    std::cout << "Enter order ID: ";
-    std::cin >> id;
-
-    ClientOrder::Status status = ClientOrder::Status::UNPROCESSED;
-
-    std::cout << "Enter order priority (1 for HIGH, 2 for NORMAL): ";
-    std::cin >> priority;
-
-    // TODO: Read hardware and electronic components from blueprint file or the console
-
-    // Creating the client order
-    ClientOrder order;
-    order.setId(id);
-    order.setStatus(static_cast<ClientOrder::Status>(orderStatus)); // Changed variable name from "status" to "orderStatus"
-    order.setPriority(static_cast<ClientOrder::Priority>(priority));
-    order.setHardwareComponents(hardwareComponents);
-    order.setElectronicComponents(electronicComponents);
-
-    // Saveing the order to the file
-    file << order << std::endl;
-    file.close();
-
-    std::cout << "Order placed successfully." << std::endl;
-}
-
-void OrderManager::displayOrders(const std::string &filename)
-{
-    std::ifstream file(filename);
-    if (!file)
-    {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return;
-    }
-
-    std::vector<ClientOrder> orders;
-    ClientOrder order;
-    while (file >> order)
-    {
-        orders.push_back(order);
-    }
-    file.close();
-
-    // Sort orders by their order of placement
-    std::sort(orders.begin(), orders.end(), [](const ClientOrder &a, const ClientOrder &b)
-              { return a.getId() < b.getId(); });
-
-    // Displaying the orders
-    for (const auto &order : orders)
-    {
-        std::cout << order << std::endl;
+        std::cin.clear();                                                   // reset the state bits back to goodbit so you can use ignore
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // ignore the rest of the line
     }
 }
 
-void OrderManager::displayOrdersByPriority(const std::string &filename, ClientOrder::Priority priority)
+void OrderManager::showMenu()
 {
-    std::ifstream file(filename);
-    if (!file)
-    {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return;
-    }
-
-    std::vector<ClientOrder> orders;
-    ClientOrder order;
-    while (file >> order)
-    {
-        if (order.getPriority() == priority)
-        {
-            orders.push_back(order);
-        }
-    }
-    file.close();
-
-    // Sort orders by their order of placement
-    std::sort(orders.begin(), orders.end(), [](const ClientOrder &a, const ClientOrder &b)
-              { return a.getId() < b.getId(); });
-
-    // Displaying the orders with the priority
-    for (const auto &order : orders)
-    {
-        std::cout << order << std::endl;
-    }
-}
-
-void OrderManager::cancelOrder(const std::string &filename, int orderId)
-{
-    std::ifstream file(filename);
-    if (!file)
-    {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return;
-    }
-
-    std::vector<ClientOrder> orders;
-    ClientOrder order;
-    while (file >> order)
-    {
-        if (order.getId() != orderId)
-        {
-            orders.push_back(order);
-        }
-    }
-    file.close();
-
-    std::ofstream outFile(filename);
-    if (!outFile)
-    {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return;
-    }
-
-    // Save the remaining orders back to the file
-    for (const auto &order : orders)
-    {
-        outFile << order << std::endl;
-    }
-    outFile.close();
-
-    std::cout << "Order canceled successfully." << std::endl;
-}
-
-int main(int argc, char *argv[])
-{
-    OrderManager orderManager;
-
-    // Checks if the correct number of command-line arguments is provided
-    if (argc != 3)
-    {
-        std::cerr << "Usage: ./OrderManager cfg_ohm.txt orders.txt\n";
-        return 1;
-    }
-
-    std::string cfgOhmPath = "data/" + std::string(argv[1]);
-    std::string ordersPath = "data/" + std::string(argv[2]);
-
-    // Use cfgOhmPath and ordersPath in your code as needed
-
     int choice;
     do
     {
-        std::cout << "1. Add new order" << std::endl;
-        std::cout << "2. Display orders" << std::endl;
-        std::cout << "3. Display orders by priority" << std::endl;
-        std::cout << "4. Cancel order" << std::endl;
-        std::cout << "5. Quit" << std::endl;
+        std::cout << "\nMenu:\n";
+        std::cout << "1. Add Order\n";
+        std::cout << "2. Display Orders\n";
+        std::cout << "3. Display Orders by Priority\n";
+        std::cout << "4. Cancel Order\n";
+        std::cout << "5. Exit\n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
 
         switch (choice)
         {
         case 1:
-            orderManager.addOrder(ordersPath);
+            addOrder();
             break;
         case 2:
-            orderManager.displayOrders(ordersPath);
+            displayOrdersByHistory();
             break;
         case 3:
-            ClientOrder::Priority priorityChoice;
-            std::cout << "Enter priority (1 for HIGH, 2 for NORMAL): ";
-            std::cin >> priorityChoice;
-            orderManager.displayOrdersByPriority(ordersPath, priorityChoice);
+            displayOrdersByPriority();
             break;
         case 4:
-            int orderId;
-            std::cout << "Enter order ID to cancel: ";
-            std::cin >> orderId;
-            orderManager.cancelOrder(ordersPath, orderId);
+            // first see all the orders then delete
+            cancelOrder();
             break;
         case 5:
-            std::cout << "Goodbye!" << std::endl;
+            std::cout << "Exiting the program...\n";
             break;
         default:
-            std::cout << "Invalid choice. Please try again." << std::endl;
+            std::cout << "Invalid choice. Try again.\n";
+            break;
+        }
+    } while (choice != 5);
+}
+
+/* void OrderManager::addOrder()
+{
+    int choice;
+    std::cout << "Add Order:\n";
+    std::cout << "1. Enter information in the console\n";
+    std::cout << "2. Read information from a file\n";
+    std::cout << "Enter your choice: ";
+    std::cin >> choice;
+
+    if (choice == 1)
+    {
+        getOrder();
+    }
+    else if (choice == 2)
+    {
+        getOrdersFromFile();
+    }
+    else
+    {
+        std::cout << "Invalid choice. Order not added.\n"; // option 3 for cancel \make them type again
+        return;
+    }
+
+    std::ofstream outputFile("orders.txt", std::ios::app);
+    if (!outputFile)
+    {
+        std::cout << "Failed to open output file.\n";
+        return;
+    }
+
+    // how do i print them?
+    outputFile << "Client Name: ";
+    outputFile << "Order ID: ";
+    outputFile << "Width: ";
+    outputFile << "Height: ";
+
+    outputFile << "Components:\n";
+    const auto &components = order.getComponents();
+    for (const auto &component : components)
+    {
+        outputFile << "components: " << component.first << "\n";
+        outputFile << component.second.first << "\n";
+        outputFile << component.second.second << "\n";
+    }
+
+    outputFile << "connections:\n";
+    const auto &connections = order.getConnections();
+    for (const auto &connection : connections)
+    {
+        outputFile << connection.first << "\n";
+        outputFile << connection.second << "\n";
+    }
+
+    outputFile << "-------------------------\n";
+    outputFile.close();
+
+    std::cout << "Order added successfully.\n";
+} */
+
+/* void OrderManager::getOrder()
+{
+    std::string orderInfo = "";
+
+    std::string clientName = "";
+    std::string componentId = "";
+    int width = 0;
+    int height = 0;
+    // can use map instead of pair
+    std::vector<std::pair<std::string, std::pair<int, int>>> components;
+    std::vector<std::pair<double, double>> connections;
+
+    while (!std::getline(std::cin, orderInfo, ':').eof())
+    {
+        std::istringstream lineStream(orderInfo);
+        std::string key, value;
+
+        // how to get the lines to print w/o whitespace
+
+        if (orderInfo == "client")
+        {
+            std::cin>>clientName;
+        }
+        else if (orderInfo == "id")
+        {
+            std::cin>>componentId;
+        }
+        else if (orderInfo == "width")
+        {
+            std::cin>>width;
+        }
+        else if (orderInfo == "height")
+        {
+            std::cin>>height;
+        }
+        else if (orderInfo == "components")
+        {
+            while (std::getline(ss, line, ','))
+            {
+                // push_back the components
+            }
+        }
+    }
+
+    if (orderId.empty())
+    {
+        orderId = generateRandomId();
+    } 
+
+    int priorityChoice;
+    std::cout << "Select priority:\n";
+    std::cout << "1. High\n";
+    std::cout << "2. Normal\n";
+    std::cout << "Enter your choice: ";
+    std::cin >> priorityChoice;
+
+    ClientOrder::Priority priority;
+    if (priorityChoice == 1)
+    {
+        priority = ClientOrder::Priority::HIGH;
+    }
+    else if (priorityChoice == 2)
+    {
+        priority = ClientOrder::Priority::NORMAL;
+    }
+    else
+    {
+        // modify later cancel and add the priorities again again
+        std::cout << "Invalid priority choice. Order not added.\n";
+        return;
+    }
+
+    // Created a new ClientOrder object with the updated constructor
+    ClientOrder order;
+    order.setClientName(clientName);
+    order.setPriority(priority);
+
+    orders.push_back(order);
+
+    std::cout << "Order added successfully.\n";
+} */
+
+void OrderManager::getOrdersFromFile()
+{
+    FileManager fm(ORDERS_FILE);
+    while(!fm.get().eof())
+    {
+        orders.emplace_back(ClientOrder(fm.get()));
+    }
+}
+
+void OrderManager::displayOrders(std::vector<ClientOrder> orders)
+{
+    if (orders.empty())
+    {
+        std::cout << "No orders to display.\n";
+        return;
+    }
+
+    std::cout << "Orders:\n";
+    for (const auto &order : orders)
+    {                                     // how?
+        std::cout << "Client Name: "; // TODO clientName
+        std::cout << "Order ID: " <<order.getId() ;    // getId
+
+        std::cout << "Components:\n";
+        const auto &components = order.getHardwareComponents();
+        for (const auto &component : components)
+        {
+            std::cout << component<<' ';
         }
 
-        std::cout << std::endl;
+        std::cout << "-------------------------\n";
+    }
+}
 
-    } while (choice != 5);
+void OrderManager::displayOrdersByHistory()
+{
+    displayOrders(this->orders);
+}
+void OrderManager::displayOrdersByPriority()
+{
+    int priorityChoice;
+    std::vector<ClientOrder> orderedOrders = orders;
 
-    return 0;
+    std::cout << "Select priority:\n";
+    std::cout << "1. High\n";
+    std::cout << "2. Normal\n";
+    std::cout << "Enter your choice: ";
+    std::cin >> priorityChoice;
+
+    std::function priorityPredicate = [](const ClientOrder& o1, const ClientOrder& o2) {return o1.getStatusAsInt() < o2.getStatusAsInt();};
+
+    ClientOrder::Priority priority;
+    if (priorityChoice == 1)
+    {
+        priority = ClientOrder::Priority::HIGH;
+    }
+    else if (priorityChoice == 2)
+    {
+        priority = ClientOrder::Priority::NORMAL;
+        priorityPredicate = [](const ClientOrder& o1, const ClientOrder& o2) {return o1.getStatusAsInt() > o2.getStatusAsInt();};
+
+    }
+    else
+    {
+        std::cout << "Invalid priority choice.\n";
+        return;
+    }
+
+    std::stable_sort(orderedOrders.begin(), orderedOrders.end(), priorityPredicate);
+    displayOrders(orderedOrders);
+}
+
+void OrderManager::cancelOrder()
+{
+
+    int orderId = 0;
+    std::cout << "\nPlease enter order ID for Cancellation:";
+    std::cin >> orderId;
+    checkInput();
+
+    for (auto iter = orders.begin(); iter != orders.end(); ++iter)
+    {
+        if (iter->getId() == orderId)
+        {
+            ClientOrder::Status status = iter->getStatus();
+            if (status == ClientOrder::Status::UNPROCESSED || status == ClientOrder::Status::PENDING)
+            {
+                orders.erase(iter);
+                std::cout << "Order with ID " << orderId << " is cancelled.\n";
+            }
+            else
+            {
+                std::cout << "Order with ID " << orderId << " cannot be cancelled. It is in progress or completed.\n";
+            }
+            return;
+        }
+    }
+
+    std::cout << "Order with ID " << orderId << " does not exist.\n";
 }
