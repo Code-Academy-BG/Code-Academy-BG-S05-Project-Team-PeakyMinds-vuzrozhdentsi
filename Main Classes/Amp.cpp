@@ -1,8 +1,5 @@
 #include "Amp.hpp"
 
-<<<<<<< Updated upstream
-void Amp::AmpMenu()
-=======
 inline void checkInput() // проверка за валидност на входа
 {
     if (std::cin.fail()) // if the previous extraction failed,
@@ -18,7 +15,6 @@ void Amp::Run()
 }
 
 void Amp::AmpMenu(std::istream &strm)
->>>>>>> Stashed changes
 {
     /* Извеждане на текущия инвентар на екрана.
 ●       Проверка за достатъчна наличност в инвентара.
@@ -35,15 +31,6 @@ void Amp::AmpMenu(std::istream &strm)
     std::cout << "\n3. Exit AMP";
 
     int choice = 0;
-<<<<<<< Updated upstream
-    while (choice < 1 || choice > 3)
-    {
-        std::cin >> choice;
-        if (choice < 1 || choice > 3)
-        {
-            std::cout << "Enter a valid choice!";
-            std::cin >> choice;
-=======
     while (!(strm >> choice).eof())
     {
         //std::cout << " the choice we got is:" << choice;
@@ -55,27 +42,17 @@ void Amp::AmpMenu(std::istream &strm)
         else
         {
             break;
->>>>>>> Stashed changes
         }
     }
 
     if (choice == 1)
     {
         printInventory();
-<<<<<<< Updated upstream
-        AmpMenu();
-    }
-    else if (choice == 2)
-    {
-        minQuantitySettingsMenu();
-        AmpMenu();
-=======
         AmpMenu(strm);
     }
     else if (choice == 2)
     {
         minQuantitySettingsMenu(strm);
->>>>>>> Stashed changes
     }
     else
     {
@@ -119,11 +96,7 @@ void Amp::CheckForNewComponentsFromVolt()
             }
             if (!found)
             {
-<<<<<<< Updated upstream
-                std::cout << "New Component from Volt Detected! Name:" << iter->first << " Def.Min.Quant:" << m_defaultMinQuantityForNewComponents;
-=======
                 std::cout << "\nNew Component from Volt Detected! Name:" << iter->first << " Def.Min.Quant:" << m_defaultMinQuantityForNewComponents;
->>>>>>> Stashed changes
                 m_minQuantity[iter->first] = m_defaultMinQuantityForNewComponents;
             }
         }
@@ -248,11 +221,7 @@ void Amp::orderResources(const std::string &id)
     updateInvertory();
 }
 
-<<<<<<< Updated upstream
-void Amp::minQuantitySettingsMenu()
-=======
 void Amp::minQuantitySettingsMenu(std::istream &strm)
->>>>>>> Stashed changes
 {
     std::cout << "\n\n"
               << "************************************************************************************";
@@ -267,15 +236,6 @@ void Amp::minQuantitySettingsMenu(std::istream &strm)
     std::cout << "Enter your choice:";
 
     int choice = 0;
-<<<<<<< Updated upstream
-    while (choice < 1 || choice > 3)
-    {
-        std::cin >> choice;
-        if (choice < 1 || choice > 3)
-        {
-            std::cout << "Enter a valid choice!";
-            std::cin >> choice;
-=======
 
     while (!(strm >> choice).eof())
     {
@@ -288,26 +248,11 @@ void Amp::minQuantitySettingsMenu(std::istream &strm)
         else
         {
             break;
->>>>>>> Stashed changes
         }
     }
 
     if (choice == 1)
     {
-<<<<<<< Updated upstream
-        setDefaultMinQuantity();
-    }
-    else if (choice == 2)
-    {
-        setComponentMinQuantity();
-    }
-    else
-    {
-        return;
-    }
-}
-void Amp::setDefaultMinQuantity()
-=======
         setDefaultMinQuantity(strm);
     }
     else if (choice == 2)
@@ -320,7 +265,6 @@ void Amp::setDefaultMinQuantity()
     }
 }
 void Amp::setDefaultMinQuantity(std::istream &strm)
->>>>>>> Stashed changes
 {
     std::cout << "\n\n"
               << "***********************************************************************************";
@@ -329,29 +273,6 @@ void Amp::setDefaultMinQuantity(std::istream &strm)
     std::cout << '\n'
               << "***********************************************************************************";
     std::cout << "\nDefault Min. Quantity for New Items - " << m_defaultMinQuantityForNewComponents;
-<<<<<<< Updated upstream
-    int n = -1;
-
-    while (n < 0)
-    {
-        std::cout << "\nEnter the New Default Min. Quantity for New Items\nOR\nEnter 0 to Go Back:";
-        std::cin >> n;
-
-        if (n == 0)
-        {
-            return;
-        }
-        else if (n < 0)
-        {
-            std::cout << "Enter either a Positive Number or a Zero:";
-        }
-    }
-
-    m_defaultMinQuantityForNewComponents = n;
-    std::cout << "\nSuccessfully changed Default Min Quantity to " << m_defaultMinQuantityForNewComponents;
-}
-void Amp::setComponentMinQuantity()
-=======
 
     int n = -1;
     std::cout << "\nEnter the New Default Min. Quantity for New Items\nOR\nEnter 0 to Go Back:";
@@ -382,7 +303,6 @@ void Amp::setComponentMinQuantity()
     }
 }
 void Amp::setComponentMinQuantity(std::istream &strm)
->>>>>>> Stashed changes
 {
     getInfofromInvertory();
 
@@ -396,31 +316,6 @@ void Amp::setComponentMinQuantity(std::istream &strm)
     std::cout << "\nDefault Min. Quantity for New Items - " << m_defaultMinQuantityForNewComponents;
     std::cout << "\nGo back if you wish to change it";
 
-<<<<<<< Updated upstream
-    std::string componentName = "";
-    while (componentName == "")
-    {
-        auto iter = m_minQuantity.begin();
-        for (iter = m_minQuantity.begin(); iter != m_minQuantity.end(); ++iter)
-        {
-            std::cout << '\n'
-                      << "Component ID:" << iter->first << ' ' << "Min Quantity:" << iter->second;
-        }
-
-        std::cout << "\nEnter a Component's name Accurately to adjust its settings:";
-        std::cout << "\nAlternatively, enter '0' to Go Back:\n";
-        componentName = "";
-        bool validNameEntered = false;
-        while (!validNameEntered)
-        {
-            std::cin >> componentName;
-            if (componentName == "0")
-            {
-                std::cout << "Going Back.";
-                return;
-            }
-
-=======
     auto iter = m_minQuantity.begin();
     for (iter = m_minQuantity.begin(); iter != m_minQuantity.end(); ++iter)
     {
@@ -445,7 +340,6 @@ void Amp::setComponentMinQuantity(std::istream &strm)
         }
         else
         {
->>>>>>> Stashed changes
             for (iter = m_minQuantity.begin(); iter != m_minQuantity.end(); ++iter)
             {
                 if (iter->first == componentName)
@@ -454,15 +348,6 @@ void Amp::setComponentMinQuantity(std::istream &strm)
                     break;
                 }
             }
-<<<<<<< Updated upstream
-
-            if (!validNameEntered)
-            {
-                std::cout << "Invalid input entered! Try Again.";
-            }
-        }
-
-=======
         }
 
         if (!validNameEntered)
@@ -481,22 +366,10 @@ void Amp::setComponentMinQuantity(std::istream &strm)
     }
     else
     {
->>>>>>> Stashed changes
         std::cout << "You've selected the following: " << '\n';
         std::cout << "Component ID:" << iter->first << ' ' << "Current Min Quantity:" << iter->second << " Enter New Min Quantity:" << '\n';
 
         int newQuantity = 0;
-<<<<<<< Updated upstream
-        while (newQuantity <= 0)
-        {
-            std::cin >> newQuantity;
-            if (newQuantity <= 0)
-            {
-                std::cout << "Please enter a quantity above 0!";
-                std::cin >> newQuantity;
-            }
-        }
-=======
         while (!(strm >> newQuantity).eof())
         {
             checkInput();
@@ -511,18 +384,12 @@ void Amp::setComponentMinQuantity(std::istream &strm)
             }
         }
         
->>>>>>> Stashed changes
         iter->second = newQuantity;
         std::cout << "\nSuccessfully changed min Quantity!";
         updateInvertory();
     }
-<<<<<<< Updated upstream
-
-    return;
-=======
     minQuantitySettingsMenu(strm);
 
->>>>>>> Stashed changes
 }
 
 void Amp::updateInvertory()
