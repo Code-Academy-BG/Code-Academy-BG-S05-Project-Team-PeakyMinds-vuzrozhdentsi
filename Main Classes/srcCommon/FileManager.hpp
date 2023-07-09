@@ -22,6 +22,7 @@ class FileManager
             {
                 throw std::invalid_argument("file is not open, Check the file, it may not be found");
             }
+            std::cout << filename << " is opened\n";
         }
         catch(const std::exception& e)
         {

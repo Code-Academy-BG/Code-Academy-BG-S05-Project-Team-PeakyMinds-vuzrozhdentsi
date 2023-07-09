@@ -168,7 +168,6 @@ std::ostream &operator<<(std::ostream &stream, const ClientOrder &order)
     {
         stream << order.getElectronicComponentsWithDesign()[i] << ' ';
     }
-    stream << '\n';
     return stream;
 }
 
@@ -185,28 +184,28 @@ std::istream &operator>>(std::istream &stream, ClientOrder &order)
     {
         ClientOrder::HardwareComponentID hc;
         stream >> hc;
-        order.getHardwareComponents().push_back(hc);
+        order.hardwareComponents.push_back(hc);
     }
     stream >> electronicComponentsSize;
     for (size_t i = 0; i < electronicComponentsSize; i++)
     {
         ClientOrder::ElectronicComponentID ec;
         stream >> ec;
-        order.getElectronicComponents().push_back(ec);
+        order.electronicComponents.push_back(ec);
     }
     stream >> hardwareComponentsSize;
     for (size_t i = 0; i < hardwareComponentsSize; i++)
     {
         HardwareComponent hc;
         stream >> hc;
-        order.getHardwareComponentsWithDesign().push_back(hc);
+        order.newHardwareComponentsWithDesign.push_back(hc);
     }
     stream >> electronicComponentsSize;
     for (size_t i = 0; i < electronicComponentsSize; i++)
     {
         ElectronicComponent ec;
         stream >> ec;
-        order.getElectronicComponentsWithDesign().push_back(ec);
+        order.newElectronicComponentsWithDesign.push_back(ec);
     }
     return stream;
 }

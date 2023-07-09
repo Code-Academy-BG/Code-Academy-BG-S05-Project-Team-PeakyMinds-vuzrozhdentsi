@@ -304,9 +304,47 @@ void OrderManager::cancelOrder()
         }
     }
 
-        std::cout << std::endl;
+        int x{0}, y{0};
+        bool isX{true}, isY{false}, isPoint{false};
+        std::string num{""};
 
-    } while (choice != 5);
+        for (size_t i = 0; i < orderInfo.size(); i++)
+        {
+            if (std::isdigit(orderInfo[i]))
+            {
+                num += orderInfo[i];
+            }
 
-    return 0;
+            if ((std::ispunct(orderInfo[i]) || (i == orderInfo.size() - 1)) && !num.empty())
+            {
+                if (isX)
+                {
+                    isY = true;
+                    isX = false;
+                    x = std::stoi(num);
+                    num.clear();
+                    continue;
+                }
+                if (isY)
+                {
+                    isPoint = true;
+                    isY = false;
+                    y = std::stoi(num);
+                    num.clear();
+                    if (i != orderInfo.size() - 1)
+                    {
+                        continue;
+                    }
+                }
+            }
+            if (isPoint)
+            {
+                isX = true;
+                isPoint = false;
+                ec.addPin(x,y);
+                num.clear();
+            }
+        }
+    }
+    return s;
 }

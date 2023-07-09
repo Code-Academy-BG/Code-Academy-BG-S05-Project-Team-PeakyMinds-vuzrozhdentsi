@@ -109,7 +109,7 @@ void Amp::CheckForNewComponentsFromVolt()
 void Amp::getCurrentInventory()
 {
     m_currentQuantity = {};
-    FileManager fm("textFiles/Inventory.txt");
+    FileManager fm("../textFiles/Inventory.txt");
 
     std::string id = "";
     int quantity = 0;
@@ -124,7 +124,7 @@ void Amp::getMinQuantity()
 {
     m_minQuantity = {};
 
-    FileManager fm("textFiles/cfg_amp.txt");
+    FileManager fm("../textFiles/cfg_amp.txt");
 
     std::string id = "";
     int quantity = 0;
@@ -394,8 +394,8 @@ void Amp::setComponentMinQuantity(std::istream &strm)
 
 void Amp::updateInvertory()
 {
-    FileManager Inventory("textFiles/Inventory.txt");
-    FileManager cfg_amp("textFiles/cfg_amp.txt");
+    FileManager Inventory("../textFiles/Inventory.txt");
+    FileManager cfg_amp("../textFiles/cfg_amp.txt");
 
     for (auto iter = m_currentQuantity.begin(); iter != m_currentQuantity.end(); ++iter)
     {

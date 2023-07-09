@@ -23,7 +23,7 @@ static std::vector<unsigned int> coordinatesOfPointsOfConnections;
 static std::map<unsigned int,unsigned int> binaryNumsFromMatrixxMask;
 static unsigned int steps = 0;
 static unsigned int pairConnectionNumber = 49;
-static std::fstream productionFile("textFiles/production.txt");
+static std::fstream productionFile("../textFiles/production.txt");
 void printBoard(Board board)
 {
  int height = board.getHeight();
@@ -53,9 +53,9 @@ std::vector<PrinterJob> HardwarePrinterManager::getComponentRequests()
    std::string word;
    std::string hardwareComponentModel;
    FileManager fm("");
-   fm.setFilename("textFiles/print_jobs.txt");
+   fm.setFilename("../textFiles/print_jobs.txt");
    int countOfComponentsToPrint = 0;
-    file.open("textFiles/print_jobs.txt");
+    file.open("../textFiles/print_jobs.txt");
    if (file.is_open())
    {
     while (std::getline(file,line))
@@ -576,12 +576,12 @@ void HardwarePrinterManager::runASAPMLBit()
  {
 
        HardwareComponent hc("id", board, components, connections);
-       FileManager fmproductionForVolt("textFiles/productionForVolt.txt");
+       FileManager fmproductionForVolt("../textFiles/productionForVolt.txt");
        fmproductionForVolt.get() << vec[i].getHardwareComponentModel() << ' ' << vec[i].getNumberOfHardwareComponentsToBePrinted() << std::endl;
        // delete_line("textFiles/print_jobs.txt",1);
 
-       FileManager fm1("textFiles/cfg_bit.txt");
-       std::fstream sleepFile("textFiles/cfg_bit.txt");
+       FileManager fm1("../textFiles/cfg_bit.txt");
+       std::fstream sleepFile("../textFiles/cfg_bit.txt");
        unsigned int prod_period_for_cutting_board = 1;
        unsigned int prod_period_for_printing_connections = 1;
        unsigned int prod_period_for_printing_component_mask = 1;
@@ -604,7 +604,7 @@ void HardwarePrinterManager::runASAPMLBit()
          sleepFile.close();
 }
 
-   FileManager fm("textFiles/production.txt");
+   FileManager fm("../textFiles/production.txt");
    if (productionFile.is_open())
    {
   Sleep(prod_period_for_cutting_board);

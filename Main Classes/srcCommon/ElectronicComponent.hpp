@@ -42,8 +42,8 @@ private:
     std::string widthAndHeightToMachineLevelFormat(int bits = BIT8);
 
 public:
-    ElectronicComponent(std::string id = "", int width = 0, int height = 0, int boardOrderNumber = 0,
-                        Point startingPosition = Point(0, 0), Rotation rotation = Rotation::Zero)
+    ElectronicComponent(const std::string& id = "", int width = 0, int height = 0, int boardOrderNumber = 0,
+                        const Point& startingPosition = Point(0, 0), Rotation rotation = Rotation::Zero)
         : id{id}, width{width}, height{height}, boardOrderNumber{boardOrderNumber},
           startingPosition{startingPosition}, rotation{rotation}
     {
@@ -64,8 +64,8 @@ public:
                 std::cout << component[i][j];
         }
     }
-    ElectronicComponent(std::string id, int width, int height, int boardOrderNumber,
-                        Point startingPosition, Rotation rotation, PinContainer pins)
+    ElectronicComponent(const std::string& id, int width, int height, int boardOrderNumber,
+                       const Point& startingPosition, Rotation rotation, PinContainer& pins)
         : id{id}, width{width}, height{height}, boardOrderNumber{boardOrderNumber},
           startingPosition{startingPosition}, rotation{rotation}, pins{pins}
     {
@@ -106,6 +106,7 @@ public:
     }
     Pin& getPinById(int wantedId);
     void setStartingPosition(Point point);
+    void setId(const std::string& newID);
     void setHeight(int h)
     {
         this->height = h;
@@ -124,7 +125,7 @@ public:
     {
         Pin p(getPins().size() + 1, x, y);
         
-        pins.emplace_back(p);
+        pins.push_back(p);
         component[y][x] = p.getId();
     }
     void addPin2(int x, int y) // this is the moment to Pin p.setid = vector index

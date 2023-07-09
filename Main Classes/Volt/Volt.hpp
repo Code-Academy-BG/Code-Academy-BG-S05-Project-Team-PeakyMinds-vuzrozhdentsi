@@ -74,7 +74,7 @@ public:
     Volt(Volt&&) =delete;
     Volt& operator=(const Volt&) =delete;
     Volt& operator=(Volt&&) = delete;
-    ~Volt();
+    ~Volt(){};
 };
 
 #endif

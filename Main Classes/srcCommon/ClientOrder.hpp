@@ -55,6 +55,22 @@ public:
     void setPriority(int orderPriority);
     std::vector<HardwareComponentID> getHardwareComponents() const;
     std::vector<HardwareComponent> getHardwareComponentsWithDesign() const;
+    void addHCDesign(const HardwareComponent& hc)
+    {
+        newHardwareComponentsWithDesign.push_back(hc);
+    }
+    void addElCDesign(const ElectronicComponent& ec)
+    {
+        newElectronicComponentsWithDesign.push_back(ec);
+    }
+    void addHC(const std::string& hc)
+    {
+        hardwareComponents.push_back(hc);
+    }
+    void addElC(const std::string& ec)
+    {
+        electronicComponents.push_back(ec);
+    }
     void setHardwareComponents(const std::vector<HardwareComponentID>& components);
     std::vector<ElectronicComponentID> getElectronicComponents() const;
     std::vector<ElectronicComponent> getElectronicComponentsWithDesign() const;

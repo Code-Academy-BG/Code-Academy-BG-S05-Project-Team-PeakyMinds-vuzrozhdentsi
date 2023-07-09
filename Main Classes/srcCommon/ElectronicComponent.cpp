@@ -91,6 +91,11 @@ void ElectronicComponent::setStartingPosition(Point point)
     startingPosition = point;
 }
 
+void ElectronicComponent::setId(const std::string& newID)
+{
+    this->id = newID;
+}
+
 std::string ElectronicComponent::toString()
 {
     std::string result{""};
@@ -223,6 +228,5 @@ std::ostream& operator<<(std::ostream& stream, const ElectronicComponent & ec)
     {
         stream << ec.pins[i] << ' ';
     }
-    stream << '\n';
     return stream;
 }

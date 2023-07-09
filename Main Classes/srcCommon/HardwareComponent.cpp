@@ -5,8 +5,8 @@ ElectronicComponentFactory HardwareComponent:: ecFactory{};
 HardwareComponent::HardwareComponent() : id{""}
 {
 }
-HardwareComponent::HardwareComponent(std::string id, Board board, ElectronicComponentContainer components, ElectronicConnectionsContainer connections) :
-id{id}, board{boardFactory.getInstance(board)}, components{components}, connections{connections}
+HardwareComponent::HardwareComponent(const std::string& id, const Board & board, ElectronicComponentContainer components, ElectronicConnectionsContainer connections) :
+id{id}, board{board}, components{components}, connections{connections}
 {
 }
 std::string HardwareComponent::getId() const
@@ -25,7 +25,7 @@ const Board &HardwareComponent::getBoard() const
 {
     return board;
 }
-const ElectronicComponent & HardwareComponent::getElectronicComponentByBoardNumber(int wanted)
+ElectronicComponent & HardwareComponent::getElectronicComponentByBoardNumber(int wanted)
 {
      for (auto & ec: getComponents())
     {
@@ -36,10 +36,14 @@ const ElectronicComponent & HardwareComponent::getElectronicComponentByBoardNumb
     }
     throw std::invalid_argument(NO_SUCH_ELECTRONIC_COMPONENT_ERROR);
 }
- void HardwareComponent::setBoard(Board board)
- { 
-     this->board = board;
- }
+void HardwareComponent::setBoard(const Board& board)
+{
+  this->board = board;
+}
+void HardwareComponent::setId(const std::string& newId)
+{
+    id = newId;
+}
 
 std::string HardwareComponent::toDecsriptionFormatSting()
 {
@@ -98,52 +102,6 @@ std::string HardwareComponent::toMachineLevelFormatSting()
     return result;
 }
 
-// std::string HardwareComponent::serialize()
-// {
-//     std::string result{""};
-//     result.append(getId()).append(" ").append(getBoard().serialize()).append(" ").append(std::to_string(getComponents().size()));
-//     for (HardwareComponent::ElectronicComponentFactoryType & c : getComponents())
-//     {
-//         result.append((*c).serialize()).append(" ");
-//     }
-//     result.append(std::to_string(getConnections().size())).append(" ");
-//     for (ElectronicConnection connection : getConnections())
-//     {
-//         //result.append(connection.serialize()).append(" ");
-//     }
-//     return result;
-// }
-// HardwareComponent HardwareComponent::deserialize(std::stringstream & strm)
-// {
-//     std::string newId{""};
-//     Board b;
-//     int numberOfComponents{0};
-//     HardwareComponent::ElectronicComponentContainer newComponents;
-//     int numberOfConnections{0};
-//     std::vector<ElectronicConnection> newConnections;
-//     strm>>newId;
-//     b = b.deserialize(strm);
-//     b = boardFactory.getInstance(b);
-//     for (size_t i = 0; i < numberOfComponents; i++)
-//     {
-//         ElectronicComponent eComp;
-//         eComp = eComp.deserialize(strm);
-//         newComponents.push_back(ecFactory.getInstancePointer(eComp));
-//     }
-    
-//     for (size_t i = 0; i < numberOfConnections; i++)
-//     {
-//         ElectronicConnection eConn;
-//         //eConn = eConn.deserialize(strm);
-//         newConnections.push_back(eConn);
-//     }
-
-//     HardwareComponent result{newId, b, newComponents, newConnections};
-//     return result;
-
-// }
-
-
 bool operator<(const HardwareComponent &h1, const HardwareComponent &h2) 
 {
     return h1.getId() < h2.getId();
@@ -187,13 +145,13 @@ std::ostream& operator<<(std::ostream & stream, const HardwareComponent& hc)
     {
      stream << hc.connections[i] << ' ';
     }
-    stream << '\n';
+
     return stream;
 }
 std::istream& operator>>(std::istream & stream, HardwareComponent& hc)
 {
     size_t containerSize{0};
-        stream >> hc.id >> hc.board >> containerSize ;
+        stream >> hc.id >> hc.board >> containerSize;
     for (size_t i = 0; i < containerSize; i++)
     {
         hc.components.emplace_back(ElectronicComponent(stream));

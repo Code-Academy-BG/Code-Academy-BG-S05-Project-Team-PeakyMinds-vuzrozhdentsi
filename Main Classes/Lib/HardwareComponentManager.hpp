@@ -17,13 +17,13 @@ private:
     HardwareComponentsManager &operator=(const HardwareComponentsManager &) = delete;
     HardwareComponentsManager &operator=(HardwareComponentsManager &&) = delete;
 
- 
+
     using libraryContainer = std::set<HardwareComponent>;
     libraryContainer librarySet;
 
 public:
     HardwareComponentsManager(){};
-    
+
     ~HardwareComponentsManager(){};
 
     libraryContainer &getLibrary()
@@ -32,7 +32,7 @@ public:
     };
     const HardwareComponent &getHardwareComponent(const std::string &wantedID)
     {
-        if (checkByName(wantedID))
+        if (!librarySet.empty() && checkByName(wantedID))
         {
             return *(std::find_if(librarySet.begin(), librarySet.end(), [&](const HardwareComponent &hc)
                                   { return hc.getId() == wantedID; }));
@@ -50,19 +50,31 @@ public:
         }
         librarySet.insert(h);
     };
-    libraryContainer& load(const std::string &libraryPathName)
+    libraryContainer &load(const std::string &libraryPathName)
     {
+        std::cout << "HC Library is loading\n";
         FileManager fm(libraryPathName);
-        while (!fm.get().eof())
-        {
-            librarySet.emplace(HardwareComponent(fm.get()));
-        }
+        
+            while (!(fm.get()>>std::ws).eof())
+            {
+                librarySet.emplace(HardwareComponent(fm.get()));
+                if(fm.get().fail()){
+                    break;
+                }
+            }
+        
+        std::cout << "HC Library is loaded\n";
         return librarySet;
     }
     bool checkByName(const std::string &wantedID)
     {
-        return !(librarySet.end() == std::find_if(librarySet.begin(), librarySet.end(), [&](const HardwareComponent &hc)
-                                                  { return hc.getId() == wantedID; }));
+        if (!librarySet.empty())
+        {
+
+            return !(librarySet.end() == std::find_if(librarySet.begin(), librarySet.end(), [&](const HardwareComponent &hc)
+                                                      { return hc.getId() == wantedID; }));
+        }
+        return false;
     }
     const std::string &getHardwareComponentId(const std::string &wantedID)
     {
@@ -75,13 +87,12 @@ public:
     void save(const std::string &libraryPathName)
     {
         FileManager fm(libraryPathName);
-    
-        for(auto iter = librarySet.begin(); iter != librarySet.end(); iter++)
+
+        for (auto iter = librarySet.begin(); iter != librarySet.end(); iter++)
         {
-            fm.get() << *iter; 
+            fm.get() << *iter;
         }
     }
 };
-
 
 #endif

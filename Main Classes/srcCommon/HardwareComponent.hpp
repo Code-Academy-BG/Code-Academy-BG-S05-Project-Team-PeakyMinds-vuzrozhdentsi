@@ -35,7 +35,7 @@ private:
 
 public:
     HardwareComponent();
-    HardwareComponent(HCID id, Board board, ElectronicComponentContainer components, ElectronicConnectionsContainer connections);
+    HardwareComponent(const std::string& id,const Board & board, ElectronicComponentContainer components, ElectronicConnectionsContainer connections);
     HardwareComponent(std::istream& stream)
     {
         stream >> *this;
@@ -44,9 +44,9 @@ public:
     ElectronicComponentContainer getComponents() const;
     ElectronicConnectionsContainer getConnections() const;
     const Board & getBoard() const;
-    const ElectronicComponent & getElectronicComponentByBoardNumber(int wanted);
-     void setBoard(Board board);
-
+    ElectronicComponent & getElectronicComponentByBoardNumber(int wanted);
+    void setBoard(const Board& board);
+    void setId(const std::string& newId);
     // TODO review
     std::string toDecsriptionFormatSting();
 
@@ -59,15 +59,17 @@ public:
 
 
     //HardwareComponent *getById(const std::string &id);
-    /* void addElectronicComponent(ElectronicComponent e, Point p, int rotationQuadrant)
+    void addElectronicComponent(ElectronicComponent & e,const  Point& p, int rotationQuadrant)
     {
-        e.rotate(rotationQuadrant);
-        // if empty size is 0, so 1 is added prior changing the size
+        e.rotateThePins(rotationQuadrant-1);
         e.setBoardOrderNumber(this->getComponents().size() + 1);
-        //... imprints the EC on the Board
         e.setStartingPosition(p);
-    } */
-    // void addConnection();
+        components.push_back(e);
+    } 
+     void addConnection(const ElectronicConnection& eCon)
+     {
+        connections.emplace_back(ElectronicConnection(eCon));
+     }
     //bool equals(const HardwareComponent &h);
     //std::string toDecsriptionFormatSting();
     //std::string toMachineLevelFormatSting();
