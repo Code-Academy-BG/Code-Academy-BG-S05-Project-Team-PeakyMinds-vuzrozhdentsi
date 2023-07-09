@@ -10,11 +10,13 @@ inventory.txt) и правене на поръчки на ресурси.
 Параметри, които приема по командния ред:
 ● релативния път от data директорията до cfg_amp.txt, конкатениран с името на файла.
 ● релативния път от data директорията до inventory.txt, конкатениран с името на файла*/
-#include "HardwareComponentManager.hpp"
 #include "FileManager.hpp"
+#include <map>
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <cmath>
+#include <limits>
 
 class Amp
 {
@@ -26,10 +28,10 @@ private:
 
 public:
     Amp(std::map<std::string, int> currentQuantity = {}, std::map<std::string, int> minQuantity = {},
-    unsigned int defaultMinQuantityForNewComponents = 5) : m_currentQuantity(currentQuantity), m_minQuantity(m_minQuantity),
-    m_defaultMinQuantityForNewComponents(m_defaultMinQuantityForNewComponents)
+    unsigned int defaultMinQuantityForNewComponents = 5) : m_currentQuantity(currentQuantity), m_minQuantity(minQuantity),
+    m_defaultMinQuantityForNewComponents(5)
     {}
-    void AmpMenu();
+    void AmpMenu(std::istream &strm);
     void CheckForNewComponentsFromVolt();
     void getCurrentInventory();
     void getMinQuantity();
@@ -37,8 +39,9 @@ public:
     void printInventory();
     bool sufficientQuantityPresent(const std::string &componentName);
     void orderResources(const std::string &id);
-    void minQuantitySettingsMenu();
-    void setDefaultMinQuantity();
-    void setComponentMinQuantity();
+    void minQuantitySettingsMenu(std::istream &strm);
+    void setDefaultMinQuantity(std::istream &strm);
+    void setComponentMinQuantity(std::istream &strm);
     void updateInvertory();
+    void Run();
 };
