@@ -9,7 +9,7 @@
 #include<vector>
 int main()
 {
-    // HardwarePrinterManager hwp;
-    // hwp.runASAPMLBit();
+     HardwarePrinterManager hwp;
+     hwp.runASAPMLBit();
     return 0;
 }

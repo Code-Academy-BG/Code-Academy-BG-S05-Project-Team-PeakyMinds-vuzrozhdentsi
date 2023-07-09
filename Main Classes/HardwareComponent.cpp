@@ -36,11 +36,10 @@ const ElectronicComponent & HardwareComponent::getElectronicComponentByBoardNumb
     }
     throw std::invalid_argument(NO_SUCH_ELECTRONIC_COMPONENT_ERROR);
 }
-// void HardwareComponent::setBoard(Board board)
-// {
-//   this->board = board;
-// }
-
+ void HardwareComponent::setBoard(Board board)
+ { 
+     this->board = board;
+ }
 
 std::string HardwareComponent::toDecsriptionFormatSting()
 {

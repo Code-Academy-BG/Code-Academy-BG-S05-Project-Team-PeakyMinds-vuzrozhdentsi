@@ -127,6 +127,13 @@ public:
         pins.emplace_back(p);
         component[y][x] = p.getId();
     }
+    void addPin2(int x, int y) // this is the moment to Pin p.setid = vector index
+    {
+        Pin p(getPins().size() + 1, x, y);
+
+        pins.emplace_back(p);
+        //  component[y][x] = p.getId();
+    }
     inline void resetAllPins()
     {
         for (auto iter = pins.begin(); iter != pins.end(); ++iter)

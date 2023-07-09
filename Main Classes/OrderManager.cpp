@@ -8,7 +8,7 @@
 #include "OrderManager.hpp"
 
 // Stream operator overload for displaying a ClientOrder object
-std::ostream &operator<<(std::ostream &os, const ClientOrder &order)
+/*std::ostream &operator<<(std::ostream &os, const ClientOrder &order)
 {
     os << "Order ID: " << order.getId() << std::endl;
 
@@ -271,4 +271,4 @@ int main(int argc, char *argv[])
     } while (choice != 5);
 
     return 0;
-}
+}*/

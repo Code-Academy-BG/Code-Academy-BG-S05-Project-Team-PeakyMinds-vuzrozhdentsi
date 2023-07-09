@@ -45,7 +45,7 @@ public:
     ElectronicConnectionsContainer getConnections() const;
     const Board & getBoard() const;
     const ElectronicComponent & getElectronicComponentByBoardNumber(int wanted);
-    // void setBoard(Board board);
+     void setBoard(Board board);
 
     // TODO review
     std::string toDecsriptionFormatSting();
