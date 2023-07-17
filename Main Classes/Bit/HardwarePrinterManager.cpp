@@ -1,22 +1,22 @@
 #include<iostream>
 #include"HardwarePrinterManager.hpp"
-#include "PrinterJob.h"
-#include "FileManager.hpp"
+#include "..\srcCommon\PrinterJob.h"
+#include "..\srcCommon\FileManager.hpp"
 #include<fstream>
 #include <sstream>
 #include<string>
-#include "Board.hpp"
-#include "Pin.hpp"
+#include "..\srcCommon\Board.hpp"
+#include "..\srcCommon\Pin.hpp"
 #include <cmath>
 #include<vector>
-#include"ElectronicComponentFactory.hpp"
-#include"HardwareComponent.hpp"
+#include"..\srcCommon\ElectronicComponentFactory.hpp"
+#include"..\srcCommon\HardwareComponent.hpp"
 #include<map>
 #include <chrono>
 #include <thread>
 #include <windows.h>
-#include "HardwareComponentManager.hpp"
-#include "ElectronicComponentsManager.hpp"
+#include "..\Lib\HardwareComponentManager.hpp"
+#include "..\Lib\ElectronicComponentsManager.hpp"
 
 static unsigned int HardwareComponentMeasuresInDecimal = 0;
 static std::vector<unsigned int> coordinatesOfPointsOfConnections;

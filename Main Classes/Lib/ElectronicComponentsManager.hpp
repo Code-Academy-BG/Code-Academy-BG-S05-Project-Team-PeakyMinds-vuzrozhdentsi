@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 #include <set> // to keep unique values
-#include "FileManager.hpp"
-#include "ElectronicComponent.hpp"
+#include "..\srcCommon\FileManager.hpp"
+#include "..\srcCommon\ElectronicComponent.hpp"
 class ElectronicComponentsManager
 {
 private:

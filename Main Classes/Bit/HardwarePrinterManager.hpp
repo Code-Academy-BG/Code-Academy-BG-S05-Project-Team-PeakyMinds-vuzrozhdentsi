@@ -2,9 +2,9 @@
 #define HARDWARE_PRINTER_MANAGER_H
 #include<iostream>
 #include<vector>
-#include "HardwareComponent.hpp"
-#include "Board.hpp"
-#include "PrinterJob.h"
+#include "..\srcCommon\HardwareComponent.hpp"
+#include "..\srcCommon\Board.hpp"
+#include "..\srcCommon\PrinterJob.h"
 typedef unsigned char u8;
 class HardwarePrinterManager
 {

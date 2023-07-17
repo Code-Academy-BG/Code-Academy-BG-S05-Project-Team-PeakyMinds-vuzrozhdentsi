@@ -1,11 +1,11 @@
 #ifndef HARDWARE_COMPONENT_MANAGER_H
 #define HARDWARE_COMPONENT_MANAGER_H
 
-#include "HardwareComponent.hpp"
+#include "..\srcCommon\HardwareComponent.hpp"
 #include <string>
 #include <vector>
 #include <set> // to keep unique values
-#include "FileManager.hpp"
+#include "..\srcCommon\FileManager.hpp"
 class HardwareComponentsManager
 {
 private:
