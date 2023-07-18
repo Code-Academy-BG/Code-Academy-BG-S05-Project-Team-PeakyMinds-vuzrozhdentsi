@@ -1,4 +1,4 @@
-#include "ClientOrder.hpp"
+#include "ClientOrder.h"
 
 const std::string ClientOrder::NO_SUCH_STATUS_ERROR = "There is no such status";
 const std::string ClientOrder::NO_SUCH_PRIORITY_ERROR = "There is no such priority";

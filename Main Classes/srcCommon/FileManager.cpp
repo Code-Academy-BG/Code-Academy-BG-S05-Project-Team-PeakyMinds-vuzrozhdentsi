@@ -33,3 +33,15 @@ void FileManager::setFilename(const std::string name)
 {
     this->filename = name;
 }
+
+void FileManager::write(const ClientOrder& order)
+{
+    try
+    {
+        file << order;
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Failed to write order to file: " << e.what() << '\n';
+    }
+}

@@ -3,6 +3,7 @@
 #include<iostream>
 #include<string>
 #include<fstream>
+#include "./ClientOrder.h"
 
 class FileManager
 {
@@ -12,6 +13,7 @@ class FileManager
     public:
     void CheckForFileExceptions();
     void setFilename(const std::string name);
+    void write(const ClientOrder& order);
 
     explicit FileManager(const std::string & filename)
     {
@@ -28,7 +30,7 @@ class FileManager
         {
             std::cerr << e.what() << '\n';
         } 
-    }
+    };
     FileManager(const FileManager&) = delete;
     FileManager& operator=(const FileManager&) = delete;
     ~FileManager()

@@ -1,7 +1,8 @@
 #include "OrderManager.hpp"
-
+const std::string OrderManager::ORDERS_FILE = "orders.txt";
 // Stream operator overload for displaying a ClientOrder object
-std::ostream &operator<<(std::ostream &os, const ClientOrder &order)
+//std::ostream &operator<<(std::ostream &os, const ClientOrder &order)
+std::string generateRandomId()
 {
     // Generate a random number using <chrono> for the seed
     auto currentTime = std::chrono::system_clock::now();
@@ -9,7 +10,6 @@ std::ostream &operator<<(std::ostream &os, const ClientOrder &order)
     std::default_random_engine generator(seed);
     std::uniform_int_distribution<uint64_t> distribution(0, std::numeric_limits<uint64_t>::max());
     uint64_t randomNumber = distribution(generator);
-
     // Convert the random number to hexadecimal format
     std::string randomId = std::to_string(randomNumber);
     randomId = "0x" + randomId; // Add "0x" prefix to indicate hexadecimal format
@@ -17,14 +17,14 @@ std::ostream &operator<<(std::ostream &os, const ClientOrder &order)
     return randomId;
 }
 
-void checkInput() // проверка за валидност на входа
-{
-    if (std::cin.fail()) // if the previous extraction failed,
-    {
-        std::cin.clear();                                                   // reset the state bits back to goodbit so you can use ignore
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // ignore the rest of the line
-    }
-}
+// void checkInput() // проверка за валидност на входа
+// {
+//     if (std::cin.fail()) // if the previous extraction failed,
+//     {
+//         std::cin.clear();                                                   // reset the state bits back to goodbit so you can use ignore
+//         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // ignore the rest of the line
+//     }
+// }
 
 void OrderManager::showMenu()
 {
@@ -43,7 +43,8 @@ void OrderManager::showMenu()
         switch (choice)
         {
         case 1:
-            addOrder();
+            //Not implemented
+            //addOrder(ORDERS_FILE);
             break;
         case 2:
             displayOrdersByHistory();
@@ -73,7 +74,7 @@ void OrderManager::showMenu()
     std::cout << "2. Read information from a file\n";
     std::cout << "Enter your choice: ";
     std::cin >> choice;
-
+​
     if (choice == 1)
     {
         getOrder();
@@ -87,20 +88,20 @@ void OrderManager::showMenu()
         std::cout << "Invalid choice. Order not added.\n"; // option 3 for cancel \make them type again
         return;
     }
-
+​
     std::ofstream outputFile("orders.txt", std::ios::app);
     if (!outputFile)
     {
         std::cout << "Failed to open output file.\n";
         return;
     }
-
+​
     // how do i print them?
     outputFile << "Client Name: ";
     outputFile << "Order ID: ";
     outputFile << "Width: ";
     outputFile << "Height: ";
-
+​
     outputFile << "Components:\n";
     const auto &components = order.getComponents();
     for (const auto &component : components)
@@ -109,7 +110,7 @@ void OrderManager::showMenu()
         outputFile << component.second.first << "\n";
         outputFile << component.second.second << "\n";
     }
-
+​
     outputFile << "connections:\n";
     const auto &connections = order.getConnections();
     for (const auto &connection : connections)
@@ -117,17 +118,17 @@ void OrderManager::showMenu()
         outputFile << connection.first << "\n";
         outputFile << connection.second << "\n";
     }
-
+​
     outputFile << "-------------------------\n";
     outputFile.close();
-
+​
     std::cout << "Order added successfully.\n";
-} */
+} 
 
 /* void OrderManager::getOrder()
 {
     std::string orderInfo = "";
-
+​
     std::string clientName = "";
     std::string componentId = "";
     int width = 0;
@@ -135,14 +136,14 @@ void OrderManager::showMenu()
     // can use map instead of pair
     std::vector<std::pair<std::string, std::pair<int, int>>> components;
     std::vector<std::pair<double, double>> connections;
-
+​
     while (!std::getline(std::cin, orderInfo, ':').eof())
     {
         std::istringstream lineStream(orderInfo);
         std::string key, value;
-
+​
         // how to get the lines to print w/o whitespace
-
+​
         if (orderInfo == "client")
         {
             std::cin>>clientName;
@@ -167,19 +168,19 @@ void OrderManager::showMenu()
             }
         }
     }
-
+​
     if (orderId.empty())
     {
         orderId = generateRandomId();
     } 
-
+​
     int priorityChoice;
     std::cout << "Select priority:\n";
     std::cout << "1. High\n";
     std::cout << "2. Normal\n";
     std::cout << "Enter your choice: ";
     std::cin >> priorityChoice;
-
+​
     ClientOrder::Priority priority;
     if (priorityChoice == 1)
     {
@@ -195,16 +196,43 @@ void OrderManager::showMenu()
         std::cout << "Invalid priority choice. Order not added.\n";
         return;
     }
-
+​
     // Created a new ClientOrder object with the updated constructor
     ClientOrder order;
     order.setClientName(clientName);
     order.setPriority(priority);
-
+​
     orders.push_back(order);
-
+​
     std::cout << "Order added successfully.\n";
 } */
+
+void OrderManager::addOrder(){
+    std::ofstream orderTXTfile(ORDERS_FILE);
+
+    if (!orderTXTfile.is_open()) {
+        std::cout << "Can't open " << ORDERS_FILE << " .\n";
+        return;
+    }
+
+
+    std::ifstream fileWithCfgOrders("test_orders.txt");
+
+    std::string line;
+    while (std::getline(std::cin, line) || std::getline(fileWithCfgOrders, line)) {
+        size_t colonPos = line.find(':');
+        if (colonPos != std::string::npos) {
+            std::string data = line.substr(colonPos + 1);
+            orderTXTfile << data << '\n';
+        }
+    }
+
+    fileWithCfgOrders.close();
+
+    orderTXTfile.close();
+
+    std::cout << "Orders are correctly add in " << ORDERS_FILE << " .\n";
+}
 
 void OrderManager::getOrdersFromFile()
 {
@@ -215,7 +243,7 @@ void OrderManager::getOrdersFromFile()
     }
 }
 
-void OrderManager::displayOrders(std::vector<ClientOrder> orders)
+void OrderManager::displayOrders(const std::vector<ClientOrder>& orders)
 {
     if (orders.empty())
     {
@@ -304,17 +332,17 @@ void OrderManager::cancelOrder()
         }
     }
 
-        int x{0}, y{0};
+        /* int x{0}, y{0};
         bool isX{true}, isY{false}, isPoint{false};
         std::string num{""};
-
+​
         for (size_t i = 0; i < orderInfo.size(); i++)
         {
             if (std::isdigit(orderInfo[i]))
             {
                 num += orderInfo[i];
             }
-
+​
             if ((std::ispunct(orderInfo[i]) || (i == orderInfo.size() - 1)) && !num.empty())
             {
                 if (isX)
@@ -346,5 +374,5 @@ void OrderManager::cancelOrder()
             }
         }
     }
-    return s;
+    return s; */
 }
