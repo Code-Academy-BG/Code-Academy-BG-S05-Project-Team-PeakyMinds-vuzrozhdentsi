@@ -36,7 +36,7 @@ private:
     std::vector<ElectronicComponent> newElectronicComponentsWithDesign;
 
 public:
-    ClientOrder(): id{0}, status{Status::UNPROCESSED}, priority{Priority::NORMAL}, clientName {""} {};
+    ClientOrder(int incomePriority, std::string incomeName): id{0}, status{Status::UNPROCESSED}, priority{static_cast<Priority>(incomePriority)}, clientName {incomeName} {};
     ClientOrder(std::istream & stream)
     {
         stream >> *this;

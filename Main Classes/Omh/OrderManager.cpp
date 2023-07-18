@@ -219,11 +219,30 @@ void OrderManager::addOrder(){
     std::ifstream fileWithCfgOrders("test_orders.txt");
 
     std::string line;
-    while (std::getline(std::cin, line) || std::getline(fileWithCfgOrders, line)) {
+    int lineCounter = 0;
+    std::string clientName;
+    int priority = 0; 
+
+
+    while (std::getline(fileWithCfgOrders, line)) {
+        
+       
         size_t colonPos = line.find(':');
         if (colonPos != std::string::npos) {
             std::string data = line.substr(colonPos + 1);
+            if(data.empty() || data == " "){
+                continue;
+            }
+            if (lineCounter == 0){
+                clientName = data;
+            }else if (lineCounter == 1) {
+                priority = std::stoi(data);
+            }
+            ClientOrder newOrder(priority, clientName);
+            orders.emplace_back(newOrder);
+
             orderTXTfile << data << '\n';
+            lineCounter++;
         }
     }
 
