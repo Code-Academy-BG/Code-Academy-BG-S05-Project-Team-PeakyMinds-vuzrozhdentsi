@@ -29,7 +29,7 @@ public:
 private:
     static const std::string ORDERS_FILE;
 
-    void checkInput();
+    // void checkInput();
     std::string generateRandomId();
     void saveOrderToFile(const ClientOrder& order);
     void displayOrders(const std::vector<ClientOrder>& orders);

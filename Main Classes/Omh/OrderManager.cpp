@@ -312,7 +312,7 @@ void OrderManager::cancelOrder()
     int orderId = 0;
     std::cout << "\nPlease enter order ID for Cancellation:";
     std::cin >> orderId;
-    checkInput();
+    //checkInput();
 
     for (auto iter = orders.begin(); iter != orders.end(); ++iter)
     {

@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <sstream>
 #include"PinFactory.hpp"
-#include"PointFactory.hpp"
 #include <iostream>
 class ElectronicComponent
 {

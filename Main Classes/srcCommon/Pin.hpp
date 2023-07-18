@@ -4,7 +4,6 @@
 #include <string>
 #include <sstream>
 #include "Point.hpp"
-#include "PointFactory.hpp"
 class Point;
 
 class Pin
