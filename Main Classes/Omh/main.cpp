@@ -8,6 +8,6 @@
 
 int main(){
     OrderManager ordManager;
-    ordManager.addOrder();
+    ordManager.showMenu();
     return 0;
 }

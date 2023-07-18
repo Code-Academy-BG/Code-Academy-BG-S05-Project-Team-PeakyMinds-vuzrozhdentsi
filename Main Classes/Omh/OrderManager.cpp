@@ -44,10 +44,10 @@ void OrderManager::showMenu()
         {
         case 1:
             //Not implemented
-            //addOrder(ORDERS_FILE);
+            addOrder();
             break;
         case 2:
-            displayOrdersByHistory();
+            displayOrders(orders);
             break;
         case 3:
             displayOrdersByPriority();
@@ -215,7 +215,6 @@ void OrderManager::addOrder(){
         return;
     }
 
-
     std::ifstream fileWithCfgOrders("test_orders.txt");
 
     std::string line;
@@ -225,25 +224,30 @@ void OrderManager::addOrder(){
 
 
     while (std::getline(fileWithCfgOrders, line)) {
-        
-       
+        if (line.empty() || line == " "){
+            lineCounter = 0;
+            priority = 0;
+            clientName = {};
+            orderTXTfile << "\n";
+            continue;
+        }
         size_t colonPos = line.find(':');
         if (colonPos != std::string::npos) {
-            std::string data = line.substr(colonPos + 1);
-            if(data.empty() || data == " "){
-                continue;
-            }
-            if (lineCounter == 0){
-                clientName = data;
-            }else if (lineCounter == 1) {
-                priority = std::stoi(data);
-            }
-            ClientOrder newOrder(priority, clientName);
-            orders.emplace_back(newOrder);
-
-            orderTXTfile << data << '\n';
-            lineCounter++;
+        std::string data = line.substr(colonPos + 1);
+        if(data.empty() || data == " ") {
+            continue;
         }
+        if (lineCounter == 0) {
+            clientName = data;
+        } else if (lineCounter == 1) {
+            priority = std::stoi(data);
+        }
+        ClientOrder newOrder(priority, clientName);
+        orders.emplace_back(newOrder);
+
+        orderTXTfile << data << '\n'; 
+        }
+        lineCounter++;
     }
 
     fileWithCfgOrders.close();
@@ -272,9 +276,9 @@ void OrderManager::displayOrders(const std::vector<ClientOrder>& orders)
 
     std::cout << "Orders:\n";
     for (const auto &order : orders)
-    {                                     // how?
-        std::cout << "Client Name: "; // TODO clientName
-        std::cout << "Order ID: " <<order.getId() ;    // getId
+    {                                     
+        std::cout << "Client Name:" << order.getClientName() << " "; // TODO clientName
+        std::cout << "Order ID: " << order.getId() << " ";    // getId
 
         std::cout << "Components:\n";
         const auto &components = order.getHardwareComponents();
@@ -291,6 +295,7 @@ void OrderManager::displayOrdersByHistory()
 {
     displayOrders(this->orders);
 }
+
 void OrderManager::displayOrdersByPriority()
 {
     int priorityChoice;
