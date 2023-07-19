@@ -52,8 +52,8 @@ std::vector<PrinterJob> HardwarePrinterManager::getComponentRequests()
    std::vector<PrinterJob> printerRequests;
    std::string word;
    std::string hardwareComponentModel;
-   FileManager fm("");
-   fm.setFilename("../textFiles/print_jobs.txt");
+  //  FileManager fm("../textFiles/print_jobs.txt");
+  //  fm.setFilename("../textFiles/print_jobs.txt");
    int countOfComponentsToPrint = 0;
     file.open("../textFiles/print_jobs.txt");
    if (file.is_open())

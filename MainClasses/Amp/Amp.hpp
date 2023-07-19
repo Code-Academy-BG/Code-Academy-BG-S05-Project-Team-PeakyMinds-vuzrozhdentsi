@@ -10,7 +10,7 @@ inventory.txt) и правене на поръчки на ресурси.
 Параметри, които приема по командния ред:
 ● релативния път от data директорията до cfg_amp.txt, конкатениран с името на файла.
 ● релативния път от data директорията до inventory.txt, конкатениран с името на файла*/
-#include "FileManager.hpp"
+#include "../srcCommon/FileManager.hpp"
 #include <map>
 #include <fstream>
 #include <string>
