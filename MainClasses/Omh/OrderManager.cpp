@@ -1,22 +1,24 @@
 #include "OrderManager.hpp"
+#include "ConstantMsg.h"
 const std::string OrderManager::ORDERS_FILE = "orders.txt";
 const std::string OrderManager::INCOME_ORDERS = "test_orders.txt";
+
 // Stream operator overload for displaying a ClientOrder object
 //std::ostream &operator<<(std::ostream &os, const ClientOrder &order)
-std::string generateRandomId()
-{
-    // Generate a random number using <chrono> for the seed
-    auto currentTime = std::chrono::system_clock::now();
-    auto seed = currentTime.time_since_epoch().count();
-    std::default_random_engine generator(seed);
-    std::uniform_int_distribution<uint64_t> distribution(0, std::numeric_limits<uint64_t>::max());
-    uint64_t randomNumber = distribution(generator);
-    // Convert the random number to hexadecimal format
-    std::string randomId = std::to_string(randomNumber);
-    randomId = "0x" + randomId; // Add "0x" prefix to indicate hexadecimal format
+// std::string generateRandomId()
+// {
+//     // Generate a random number using <chrono> for the seed
+//     auto currentTime = std::chrono::system_clock::now();
+//     auto seed = currentTime.time_since_epoch().count();
+//     std::default_random_engine generator(seed);
+//     std::uniform_int_distribution<uint64_t> distribution(0, std::numeric_limits<uint64_t>::max());
+//     uint64_t randomNumber = distribution(generator);
+//     // Convert the random number to hexadecimal format
+//     std::string randomId = std::to_string(randomNumber);
+//     randomId = "0x" + randomId; // Add "0x" prefix to indicate hexadecimal format
 
-    return randomId;
-}
+//     return randomId;
+// }
 
 // void checkInput() // проверка за валидност на входа
 // {
@@ -32,13 +34,7 @@ void OrderManager::showMenu()
     int choice;
     do
     {
-        std::cout << "\nMenu:\n";
-        std::cout << "1. Add Order\n";
-        std::cout << "2. Display Orders\n";
-        std::cout << "3. Display Orders by Priority\n";
-        std::cout << "4. Cancel Order\n";
-        std::cout << "5. Exit\n";
-        std::cout << "Enter your choice: ";
+        std::cout << MENU;
         std::cin >> choice;
 
         switch (choice)
@@ -57,10 +53,10 @@ void OrderManager::showMenu()
             cancelOrder();
             break;
         case 5:
-            std::cout << "Exiting the program...\n";
+            std::cout << EXITING_MSG;
             break;
         default:
-            std::cout << "Invalid choice. Try again.\n";
+            std::cout << INVALID_CHOICE_MSG;
             break;
         }
     } while (choice != 5);
@@ -263,7 +259,7 @@ void OrderManager::addOrder(){
 
     orderTXTfile.close();
 
-    std::cout << "Orders are correctly add in " << ORDERS_FILE << " .\n";
+    std::cout << ORDERS_ARE_CORRECTLY_ADD << ORDERS_FILE << " .\n";
 }
 
 // void OrderManager::getOrdersFromFile()
@@ -279,25 +275,25 @@ void OrderManager::displayOrders(const std::vector<ClientOrder>& orders)
 {
     if (orders.empty())
     {
-        std::cout << "No orders to display.\n";
+        std::cout << NO_ORDER_TO_DISPLAY;
         return;
     }
 
-    std::cout << "Orders:\n";
+    std::cout << ORDERS;
 
     for (const auto &order : orders)
     {                                     
-        std::cout << "Client Name:" << order.getClientName() << " "; 
-        std::cout << "Order ID: " << order.getId() << " ";   
+        std::cout << CLIENT_NAME << order.getClientName() << " "; 
+        std::cout << ORDER_ID << order.getId() << " ";   
 
-        std::cout << "HardwareID: " << order.getHardwareComponentID() << "\n";;
+        std::cout << HARDWARE_ID << order.getHardwareComponentID() << "\n";;
         // const auto &components = order.getHardwareComponents();
         // for (const auto &component : components)
         // {
         //     std::cout << component<<' ';
         // }
 
-        std::cout << "-------------------------\n";
+        std::cout << ORDERS_LINE_DELIMITER;
       
     }
 }
@@ -312,10 +308,7 @@ void OrderManager::displayOrdersByPriority()
     int priorityChoice;
     // std::vector<ClientOrder> orderedOrders = orders;
 
-    std::cout << "Select priority:\n";
-    std::cout << "1. High\n";
-    std::cout << "2. Normal\n";
-    std::cout << "Enter your choice: ";
+    std::cout << SELECT_PRIORITY_MENU;
     std::cin >> priorityChoice;
 
     // std::function priorityPredicate = [](const ClientOrder& o1, const ClientOrder& o2) {return o1.getPriorityAsInt() < o2.getPriorityAsInt();};
@@ -339,7 +332,7 @@ void OrderManager::displayOrdersByPriority()
     }
     else
     {
-        std::cout << "Invalid priority choice.\n";
+        std::cout << INVALID_PRIORITY_CHOICE_MSG;
         return;
     }
 
@@ -351,7 +344,7 @@ void OrderManager::cancelOrder()
 {
 
     int orderId = 0;
-    std::cout << "\nPlease enter order ID for Cancellation:";
+    std::cout << CANCELATION_MSG;
     std::cin >> orderId;
     //checkInput();
 
@@ -363,11 +356,11 @@ void OrderManager::cancelOrder()
             if (status == ClientOrder::Status::UNPROCESSED || status == ClientOrder::Status::PENDING)
             {
                 orders.erase(iter);
-                std::cout << "Order with ID " << orderId << " is cancelled.\n";
+                std::cout << ORDER_WITH_ID << orderId << IS_CANCELED;
             }
             else
             {
-                std::cout << "Order with ID " << orderId << " cannot be cancelled. It is in progress or completed.\n";
+                std::cout << ORDER_WITH_ID << orderId << CAN_NOT_BE_CANCEL;
             }
             return;
         }
