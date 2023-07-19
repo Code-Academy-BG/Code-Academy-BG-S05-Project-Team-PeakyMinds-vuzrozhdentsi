@@ -145,67 +145,67 @@ int ClientOrder::getPriorityAsInt() const
     throw std::invalid_argument(NO_SUCH_PRIORITY_ERROR);
 }
 
-// std::ostream &operator<<(std::ostream &stream, const ClientOrder &order)
-// {
-//     stream << order.getId() << ' ' << order.getPriorityAsInt() << ' ' << order.getStatusAsInt() << ' '
-//            << order.getClientName() << ' ' << order.getHardwareComponents().size() << ' ';
-//     for (size_t i = 0; i < order.getHardwareComponents().size(); i++)
-//     {
-//         stream << order.getHardwareComponents()[i] << ' ';
-//     }
-//     stream << order.getElectronicComponents().size() << ' ';
-//     for (size_t i = 0; i < order.getElectronicComponents().size(); i++)
-//     {
-//         stream << order.getElectronicComponents()[i] << ' ';
-//     }
-//     stream << order.getHardwareComponentsWithDesign().size() << ' ';
-//     for (size_t i = 0; i < order.getHardwareComponentsWithDesign().size(); i++)
-//     {
-//         stream << order.getHardwareComponentsWithDesign()[i] << ' ';
-//     }
-//     stream << order.getElectronicComponentsWithDesign().size() << ' ';
-//     for (size_t i = 0; i < order.getElectronicComponentsWithDesign().size(); i++)
-//     {
-//         stream << order.getElectronicComponentsWithDesign()[i] << ' ';
-//     }
-//     return stream;
-// }
+std::ostream &operator<<(std::ostream &stream, const ClientOrder &order)
+{
+    stream << order.getId() << ' ' << order.getPriorityAsInt() << ' ' << order.getStatusAsInt() << ' '
+           << order.getClientName() << ' ' << order.getHardwareComponents().size() << ' ';
+    for (size_t i = 0; i < order.getHardwareComponents().size(); i++)
+    {
+        stream << order.getHardwareComponents()[i] << ' ';
+    }
+    stream << order.getElectronicComponents().size() << ' ';
+    for (size_t i = 0; i < order.getElectronicComponents().size(); i++)
+    {
+        stream << order.getElectronicComponents()[i] << ' ';
+    }
+    stream << order.getHardwareComponentsWithDesign().size() << ' ';
+    for (size_t i = 0; i < order.getHardwareComponentsWithDesign().size(); i++)
+    {
+        stream << order.getHardwareComponentsWithDesign()[i] << ' ';
+    }
+    stream << order.getElectronicComponentsWithDesign().size() << ' ';
+    for (size_t i = 0; i < order.getElectronicComponentsWithDesign().size(); i++)
+    {
+        stream << order.getElectronicComponentsWithDesign()[i] << ' ';
+    }
+    return stream;
+}
 
-// std::istream &operator>>(std::istream &stream, ClientOrder &order)
-// {
-//     size_t hardwareComponentsSize{0};
-//     size_t electronicComponentsSize{0};
-//     int priorityInt{0};
-//     int statusInt{0};
-//     stream >> order.id >> priorityInt >> statusInt >> order.clientName >> hardwareComponentsSize;
-//     order.setPriority(priorityInt);
-//     order.setStatus(statusInt);
-//     for (size_t i = 0; i < hardwareComponentsSize; i++)
-//     {
-//         ClientOrder::HardwareComponentID hc;
-//         stream >> hc;
-//         order.hardwareComponents.push_back(hc);
-//     }
-//     stream >> electronicComponentsSize;
-//     for (size_t i = 0; i < electronicComponentsSize; i++)
-//     {
-//         ClientOrder::ElectronicComponentID ec;
-//         stream >> ec;
-//         order.electronicComponents.push_back(ec);
-//     }
-//     stream >> hardwareComponentsSize;
-//     for (size_t i = 0; i < hardwareComponentsSize; i++)
-//     {
-//         HardwareComponent hc;
-//         stream >> hc;
-//         order.newHardwareComponentsWithDesign.push_back(hc);
-//     }
-//     stream >> electronicComponentsSize;
-//     for (size_t i = 0; i < electronicComponentsSize; i++)
-//     {
-//         ElectronicComponent ec;
-//         stream >> ec;
-//         order.newElectronicComponentsWithDesign.push_back(ec);
-//     }
-//     return stream;
-// }
+std::istream &operator>>(std::istream &stream, ClientOrder &order)
+{
+    size_t hardwareComponentsSize{0};
+    size_t electronicComponentsSize{0};
+    int priorityInt{0};
+    int statusInt{0};
+    stream >> order.id >> priorityInt >> statusInt >> order.clientName >> hardwareComponentsSize;
+    order.setPriority(priorityInt);
+    order.setStatus(statusInt);
+    for (size_t i = 0; i < hardwareComponentsSize; i++)
+    {
+        ClientOrder::HardwareComponentID hc;
+        stream >> hc;
+        order.hardwareComponents.push_back(hc);
+    }
+    stream >> electronicComponentsSize;
+    for (size_t i = 0; i < electronicComponentsSize; i++)
+    {
+        ClientOrder::ElectronicComponentID ec;
+        stream >> ec;
+        order.electronicComponents.push_back(ec);
+    }
+    stream >> hardwareComponentsSize;
+    for (size_t i = 0; i < hardwareComponentsSize; i++)
+    {
+        HardwareComponent hc;
+        stream >> hc;
+        order.newHardwareComponentsWithDesign.push_back(hc);
+    }
+    stream >> electronicComponentsSize;
+    for (size_t i = 0; i < electronicComponentsSize; i++)
+    {
+        ElectronicComponent ec;
+        stream >> ec;
+        order.newElectronicComponentsWithDesign.push_back(ec);
+    }
+    return stream;
+}

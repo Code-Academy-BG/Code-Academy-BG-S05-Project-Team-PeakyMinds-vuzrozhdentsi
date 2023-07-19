@@ -1,15 +1,15 @@
 #ifndef VOLT_HPP
 #define VOLT_HPP
 
-#include"FileManager.hpp"
-#include"HardwareComponent.hpp"
-#include "HardwareComponentManager.hpp"
-#include "ElectronicComponentsManager.hpp"
-#include"ClientOrder.hpp"
-#include<vector>
-#include<set>
-#include<queue>
-#include<map>
+#include "..\srcCommon\FileManager.hpp"
+#include "..\srcCommon\HardwareComponent.hpp"
+#include "..\Lib\HardwareComponentManager.hpp"
+#include "..\Lib\ElectronicComponentsManager.hpp"
+#include "..\srcCommon\ClientOrder.h"
+#include <vector>
+#include <set>
+#include <queue>
+#include <map>
 #include <memory>
 // IMPORTANT
 // This class is only committed and pushed to repo as per CA request for visibility on the progress. 

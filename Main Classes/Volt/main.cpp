@@ -1,5 +1,6 @@
 #include "Volt.hpp"
-int main(){
+int main()
+{
 
     Volt::get().run();
 

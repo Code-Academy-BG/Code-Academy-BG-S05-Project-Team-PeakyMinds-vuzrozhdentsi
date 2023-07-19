@@ -41,7 +41,7 @@ public:
   friend bool operator!=(const Pin &p1, const Pin &p2);
   friend std::ostream &operator<<(std::ostream &stream, const Pin &p)
   {
-    stream << p.getId() << ' ' << p.getPoint();
+    stream << p.getId() << ' ' << p.getPoint() << ' ';
     return stream;
   }
   friend std::istream &operator>>(std::istream &stream, Pin &p)

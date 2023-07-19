@@ -1,6 +1,6 @@
  Samsung
  2
- Exynos_A_100_B87
+ Exynos_A_100_B87 
  150
  30
  (10,0),1

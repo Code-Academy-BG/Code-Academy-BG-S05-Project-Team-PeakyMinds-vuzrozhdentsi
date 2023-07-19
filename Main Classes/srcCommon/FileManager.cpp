@@ -24,8 +24,6 @@ void FileManager::CheckForFileExceptions()
      catch (std::ifstream::failure e) {
     std::cout << "Exception opening/reading/closing file\n";
   }
-
-    
 }
 
  

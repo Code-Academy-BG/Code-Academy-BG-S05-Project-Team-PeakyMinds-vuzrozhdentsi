@@ -38,10 +38,10 @@ private:
 
 public:
     ClientOrder(int orderId, int incomePriority, std::string incomeName): id{orderId}, status{Status::UNPROCESSED}, priority{static_cast<Priority>(incomePriority)}, clientName {incomeName} {};
-    // ClientOrder(std::istream & stream)
-    // {
-    //     stream >> *this;
-    // }
+    ClientOrder(std::istream & stream)
+    {
+        stream >> *this;
+    }
     void setHardwareComponentID(HardwareComponentID hCID) {hardwareComp = hCID;};
     HardwareComponentID getHardwareComponentID() const {return hardwareComp;};
     int getId() const;
@@ -77,8 +77,8 @@ public:
     std::vector<ElectronicComponentID> getElectronicComponents() const;
     std::vector<ElectronicComponent> getElectronicComponentsWithDesign() const;
     void setElectronicComponents(const std::vector<ElectronicComponentID>& components);   
-    // friend std::ostream& operator<<(std::ostream & stream, const ClientOrder& order);
-    // friend std::istream& operator>>(std::istream & stream, ClientOrder& order);
+    friend std::ostream& operator<<(std::ostream & stream, const ClientOrder& order);
+    friend std::istream& operator>>(std::istream & stream, ClientOrder& order);
 };
 
 #endif
