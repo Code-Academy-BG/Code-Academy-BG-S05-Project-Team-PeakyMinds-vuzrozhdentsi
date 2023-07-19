@@ -21,7 +21,7 @@ void FileManager::CheckForFileExceptions()
       std::cout << "Hi"; //e.printMessage();
        
     }
-     catch (std::ifstream::failure e) {
+     catch (const std::ifstream::failure& e) {
     std::cout << "Exception opening/reading/closing file\n";
   }
 }

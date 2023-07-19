@@ -30,8 +30,8 @@ private:
     int width;
     int height;
     int boardOrderNumber;
-    Rotation rotation;
     Point startingPosition;
+    Rotation rotation;
     std::vector<std::vector<int>> component = {};
     PinContainer pins;
 

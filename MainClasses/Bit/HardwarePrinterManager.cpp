@@ -17,13 +17,13 @@
 #include <windows.h>
 #include "..\Lib\HardwareComponentManager.hpp"
 #include "..\Lib\ElectronicComponentsManager.hpp"
+#include "DefaultNames.h"
 
 static unsigned int HardwareComponentMeasuresInDecimal = 0;
 static std::vector<unsigned int> coordinatesOfPointsOfConnections;
 static std::map<unsigned int,unsigned int> binaryNumsFromMatrixxMask;
 static unsigned int steps = 0;
-static unsigned int pairConnectionNumber = 49;
-static std::fstream productionFile("../textFiles/production.txt");
+static std::fstream productionFile(bit::PRODUCTION_FILE);
 void printBoard(Board board)
 {
  int height = board.getHeight();
@@ -33,17 +33,21 @@ void printBoard(Board board)
     productionFile << '\n';
     for (int j = 0; j < width; j++)
     {
-      productionFile << '*';
+      productionFile << bit::AST;
     }
   }
   productionFile << std::endl;
 }
-HardwareComponent& HardwarePrinterManager::getHardwareComponentModel(const std::string &hardwareComponentModel)
+
+
+HardwareComponent HardwarePrinterManager::getHardwareComponentModel(const std::string &hardwareComponentModel)
 {
   HardwareComponentsManager hcm;
   HardwareComponent hc = hcm.getHardwareComponent(hardwareComponentModel);
   return hc;
 }
+
+
 
 std::vector<PrinterJob> HardwarePrinterManager::getComponentRequests()
 {
@@ -55,7 +59,7 @@ std::vector<PrinterJob> HardwarePrinterManager::getComponentRequests()
   //  FileManager fm("../textFiles/print_jobs.txt");
   //  fm.setFilename("../textFiles/print_jobs.txt");
    int countOfComponentsToPrint = 0;
-    file.open("../textFiles/print_jobs.txt");
+    file.open(bit::PRINTJOBS_FILE);
    if (file.is_open())
    {
     while (std::getline(file,line))
@@ -80,13 +84,13 @@ std::vector<PrinterJob> HardwarePrinterManager::getComponentRequests()
    return printerRequests;
 }
 void delete_line(const char *file_name, int n)
-{
+{   
    // open file in read mode or in mode
    std::ifstream is(file_name);
-
+    const char* temp = bit::TEMP_FILE;
    // open file in write mode or out mode
    std::ofstream ofs;
-   ofs.open("temp.txt", std::ofstream::out);
+   ofs.open(temp, std::ofstream::out);
 
    // loop getting single characters
    char c;
@@ -110,9 +114,10 @@ void delete_line(const char *file_name, int n)
 
    // remove the original file
    remove(file_name);
-
+  
+  
    // rename the file
-   rename("temp.txt", file_name);
+   rename(temp, file_name);
 }
 
 unsigned int get16BitBinNumInDecimal(int a, int b)
@@ -133,7 +138,7 @@ void HardwarePrinterManager::cutBoardToFitHardwareComponent(HardwareComponent& h
   board.setWidth(11);
   hardwareComponent.setBoard(board);
   productionFile << std::endl
-                 << "----------------- STEP 0: Cut board" << std::endl;
+                 << bit::STEP_0 << std::endl;
 
   HardwareComponentMeasuresInDecimal = get16BitBinNumInDecimal(height,width);
   productionFile << hardwareComponent.getId() << ' ' << HardwareComponentMeasuresInDecimal << std::endl;
@@ -152,11 +157,11 @@ void printBoardWithConnection(std::pair<Pin,Pin> connection,Board board)
       if (((i == connection.first.getPoint().getY()) && (j == connection.first.getPoint().getX()))
        || ((i == connection.second.getPoint().getY()) && (j == connection.second.getPoint().getX())))
       {
-        productionFile << '1';
+        productionFile << bit::ONE;
       }
       else
       {
-        productionFile << '*';
+        productionFile << bit::AST;
       }
     }
     productionFile << std::endl;
@@ -169,18 +174,18 @@ void HardwarePrinterManager::printConnectionsBetweenPins(HardwareComponent hardw
  
    //board.printBoard();
    std::vector<ElectronicConnection> elConnections = hardwareComponent.getConnections();
-   productionFile << "space: " << elConnections.size() << std::endl;
+   productionFile << bit::SPACE << elConnections.size() << std::endl;
    int size = elConnections.size();
    int i;
    for (i = 0; i <size ; i++)
    {
      std::pair<Pin,Pin> connection = elConnections[i].getPinConnection();
      productionFile << std::endl
-                    << "----------------- STEP" << ++steps << ": Connection " << i << std::endl;
+                    << bit::STEP << ++steps << bit::CONNECTION << i << std::endl;
      productionFile << hardwareComponent.getId() << ' ' << HardwareComponentMeasuresInDecimal << std::endl;
      coordinatesOfPointsOfConnections.push_back(get16BitBinNumInDecimal(connection.first.getPoint().getY(), connection.first.getPoint().getX()));
      coordinatesOfPointsOfConnections.push_back(get16BitBinNumInDecimal(connection.second.getPoint().getY(), connection.second.getPoint().getX()));
-     for (int j = 0; j < coordinatesOfPointsOfConnections.size(); j++)
+     for (size_t j = 0; j < coordinatesOfPointsOfConnections.size(); j++)
      {
       productionFile << coordinatesOfPointsOfConnections[j] << ' ';
               }
@@ -194,11 +199,11 @@ void printMatrix(std::vector<std::vector<char>>& matrixMask)
 {
   
   
-   for (int i = 0; i < matrixMask.size(); i++)
+   for (size_t i = 0; i < matrixMask.size(); i++)
    {
               std::vector<char> vec = matrixMask[i];
             
-              for (int j = 0; j < matrixMask[i].size(); j++)
+              for (size_t j = 0; j < matrixMask[i].size(); j++)
               {
 
       productionFile << vec[j];
@@ -221,7 +226,7 @@ std::vector<std::vector<char>> InitializeMatrixMask(const Board &board)
 
      for (int j = 0; j < width; j++)
      {
-      vec.push_back('*');
+      vec.push_back(bit::AST);
               
                 // std::cout << vec[j];
     }
@@ -262,7 +267,7 @@ void fillUpMatrixMask(Board board, ElectronicComponent &elcomp, std::vector<std:
     {
       if ((i < elcompHeight + y && j < elcompWidth + x) || (i > elcompHeight + y && j > elcompWidth + x))
       {
-        matrixMask[i][j] = '1';
+        matrixMask[i][j] = bit::ONE;
       }
     }
   }
@@ -273,8 +278,8 @@ void saveBinaryNumsFromMatrixMask(std::vector<std::vector<char>> &matrixMask)
 
   unsigned char num = 0;
   unsigned int counter = 0;
-  unsigned int i;
-  unsigned int j;
+  size_t i;
+  size_t j;
   unsigned int key = 1;
   const unsigned int numberOfBitsInNum = 8;
   for (i = 0; i < matrixMask.size(); i++)
@@ -283,7 +288,7 @@ void saveBinaryNumsFromMatrixMask(std::vector<std::vector<char>> &matrixMask)
 
     for (j = 0; j < size; j++)
     {
-      if (matrixMask[i][j] == '1')
+      if (matrixMask[i][j] == bit::ONE)
       {
         num |= 1;
         num <<= 1;
@@ -292,7 +297,7 @@ void saveBinaryNumsFromMatrixMask(std::vector<std::vector<char>> &matrixMask)
         if (j == (size - 1))
         {
          
-          for (int k = 0; k < numberOfBitsInNum - counter - 1; k++)
+          for (unsigned k = 0; k < numberOfBitsInNum - counter - 1; k++)
           {
             num <<= 1;
           }
@@ -302,7 +307,7 @@ void saveBinaryNumsFromMatrixMask(std::vector<std::vector<char>> &matrixMask)
           num = 0;
         }
       }
-      else if (matrixMask[i][j] == '*' && matrixMask[i][j+1] == '1')
+      else if (matrixMask[i][j] == bit::AST && matrixMask[i][j+1] == bit::ONE)
       {
         binaryNumsFromMatrixxMask[key] = (unsigned int)num;
         key++;
@@ -336,12 +341,12 @@ void printBinaryNumsFromMatrixxMask()
    
   
    const Board &board = HardwareComponent.getBoard();
-   productionFile << "----------------- STEP 3: COMPONENTS MASK - " << std::endl;
+   productionFile << bit::STEP_3 << std::endl;
    int size = HardwareComponent.getComponents().size();
    HardwareComponent::ElectronicComponentContainer elcomps = HardwareComponent.getComponents();
 
    productionFile << HardwareComponent.getId() << ' ' << HardwareComponentMeasuresInDecimal << std::endl;
-   for (int j = 0; j < coordinatesOfPointsOfConnections.size(); j++)
+   for (size_t j = 0; j < coordinatesOfPointsOfConnections.size(); j++)
    {
     productionFile << coordinatesOfPointsOfConnections[j] << ' ';
    }
@@ -362,7 +367,7 @@ int findNumberOfSameElcomps(HardwareComponent &HardwareComponent, const std::str
 {
    std::vector<ElectronicComponent> elcomp = HardwareComponent.getComponents();
    int counter = 0;
-   for (int i = 0; i < elcomp.size(); i++)
+   for (size_t i = 0; i < elcomp.size(); i++)
    {
       if (elcomp[i].getId() == id)
       {
@@ -374,10 +379,10 @@ int findNumberOfSameElcomps(HardwareComponent &HardwareComponent, const std::str
 void fillTheMatrixWithZerosInTheElCompPositions(std::vector<std::vector<char>> &matrixMask,HardwareComponent& hc)
 {
 
-   productionFile << "----------------- STEP 4: COMPONENTS - " << std::endl;
+   productionFile << bit::STEP_4 << std::endl;
    std::vector<ElectronicComponent> components = hc.getComponents();
    productionFile << hc.getId() << ' ' << HardwareComponentMeasuresInDecimal << std::endl;
-   for (int i = 0; i < components.size() ; i++)
+   for (size_t i = 0; i < components.size() ; i++)
    {
       productionFile << components[i].getId() << ' ';
       productionFile << findNumberOfSameElcomps(hc, components[i].getId()) << ' ' << components[i].getStartingPosition().getY()
@@ -386,21 +391,21 @@ void fillTheMatrixWithZerosInTheElCompPositions(std::vector<std::vector<char>> &
    productionFile << std::endl;
    
 
-   for (int j = 0; j < coordinatesOfPointsOfConnections.size(); j++)
+   for (size_t j = 0; j < coordinatesOfPointsOfConnections.size(); j++)
    {
       productionFile << coordinatesOfPointsOfConnections[j] << ' ';
    }
 
    productionFile << std::endl;
    productionFile << hc.getId() << std::endl;
-   for (int i = 0; i < matrixMask.size(); i++)
+   for (size_t i = 0; i < matrixMask.size(); i++)
    {
-      int size = matrixMask[i].size();
-      for (int j = 0; j < size; j++)
+      size_t size = matrixMask[i].size();
+      for (size_t j = 0; j < size; j++)
       {
-        if (matrixMask[i][j] == '1')
+        if (matrixMask[i][j] == bit::ONE)
         {
-          matrixMask[i][j] = '0';
+          matrixMask[i][j] = bit::ZERO;
         }
         
       }
@@ -414,7 +419,7 @@ void fillTheMatrixWithZerosInTheElCompPositions(std::vector<std::vector<char>> &
 void placeConnectionPinsOnMatrix(HardwareComponent &HardwareComponent, std::vector<std::vector<char>> &matrixMask)
 {
     std::vector<ElectronicConnection> connections = HardwareComponent.getConnections();
-    for (int i = 0; i < connections.size(); i++)
+    for (size_t i = 0; i < connections.size(); i++)
     {
        Pin pin1 = connections[i].getPinConnection().first;
        Pin pin2 = connections[i].getPinConnection().second;
@@ -429,7 +434,7 @@ void placeConnectionPinsOnMatrix(HardwareComponent &HardwareComponent, std::vect
 bool hasElcompGotPin(const ElectronicComponent &elcom, const Pin &pin)
 {
   std::vector<Pin> pins = elcom.getPins();
-     for (int i = 0; i <pins.size(); i++)
+     for (size_t i = 0; i <pins.size(); i++)
      {
        if (pins[i] == pin)
        {
@@ -443,7 +448,7 @@ bool hasElcompGotPin(const ElectronicComponent &elcom, const Pin &pin)
 int getNumOfPinFromElectronicComponent(const ElectronicComponent& elcom,const Pin& pin)
 {
    std::vector<Pin> pins = elcom.getPins();
-   for (int i = 0; i < pins.size(); i++)
+   for (size_t i = 0; i < pins.size(); i++)
    {
      if (pins[i] == pin)
      {
@@ -461,12 +466,12 @@ void printConnectionsForFinalResult(HardwareComponent &HardwareComponent)
 
    std::vector<ElectronicComponent> comps = HardwareComponent.getComponents();
    std::vector<ElectronicConnection> cons = HardwareComponent.getConnections();
-   for (int i = 0; i < cons.size(); i++)
+   for (size_t i = 0; i < cons.size(); i++)
    {
     
      int numOfElcomp1 = 0;
      int numOfElcomp2 = 0;
-     for (int j = 0; j < comps.size(); j++)
+     for (size_t j = 0; j < comps.size(); j++)
      {
         if (hasElcompGotPin(comps[j],cons[i].getPinConnection().first))
         {
@@ -475,7 +480,7 @@ void printConnectionsForFinalResult(HardwareComponent &HardwareComponent)
         }
         
      }
-      for (int k = 0; k < comps.size(); k++)
+      for (size_t k = 0; k < comps.size(); k++)
       {
          if (hasElcompGotPin(comps[k], cons[i].getPinConnection().second))
          {
@@ -498,12 +503,12 @@ void printConnectionsForFinalResult(HardwareComponent &HardwareComponent)
 
 void HardwarePrinterManager::printFinalResults(HardwareComponent &HardwareComponent, std::vector<std::vector<char>> &matrixMask)
 {
-        productionFile << "----------------- STEP 5: FINAL RESULT FROM BIT IN ALL 3 FORMATS" << std::endl
+        productionFile << bit::STEP_5 << std::endl
                        << std::endl;
-        productionFile << "id: " << HardwareComponent.getId() << std::endl;
-        productionFile << "width: " << HardwareComponent.getBoard().getWidth() << std::endl;
-        productionFile << "height: " << HardwareComponent.getBoard().getHeight() << std::endl;
-        productionFile << "components: " << std::endl;
+        productionFile << bit::ID << HardwareComponent.getId() << std::endl;
+        productionFile << bit::WIDHT << HardwareComponent.getBoard().getWidth() << std::endl;
+        productionFile << bit::HEIGHT << HardwareComponent.getBoard().getHeight() << std::endl;
+        productionFile << bit::COMPONENTS << std::endl;
         std::vector<ElectronicComponent> components = HardwareComponent.getComponents();
         int size = components.size();
         for (int i = 0; i < size; i++)
@@ -511,10 +516,10 @@ void HardwarePrinterManager::printFinalResults(HardwareComponent &HardwareCompon
        productionFile << components[i].getId() << ": (" << components[i].getStartingPosition().getX() << ',' << components[i].getStartingPosition().getY()
                       << ')' << components[i].getRotation() << std::endl;
     }
-    productionFile << "connections: ";
+    productionFile << bit::CONNECTIONS;
    printConnectionsForFinalResult(HardwareComponent);
    productionFile <<  std::endl;
-   for (int i = 0; i < components.size(); i++)
+   for (size_t i = 0; i < components.size(); i++)
    {
        productionFile << components[i].getId() << ' ';
        productionFile << findNumberOfSameElcomps(HardwareComponent,components[i].getId()) << ' ' << components[i].getStartingPosition().getY()
@@ -523,7 +528,7 @@ void HardwarePrinterManager::printFinalResults(HardwareComponent &HardwareCompon
    productionFile << std::endl;
    productionFile << HardwareComponent.getId() << ' ' << HardwareComponentMeasuresInDecimal << std::endl;
 
-   for (int j = 0; j < coordinatesOfPointsOfConnections.size(); j++)
+   for (size_t j = 0; j < coordinatesOfPointsOfConnections.size(); j++)
    {
        productionFile << coordinatesOfPointsOfConnections[j] << ' ';
    }
@@ -572,16 +577,16 @@ void HardwarePrinterManager::runASAPMLBit()
    HardwareComponent hc("id", board, components, connections);
    std::vector<PrinterJob> vec = getComponentRequests();
 // std::map<std::string,int > production;
- for (int i = 0; i < vec.size(); i++)
+ for (size_t i = 0; i < vec.size(); i++)
  {
 
        HardwareComponent hc("id", board, components, connections);
-       FileManager fmproductionForVolt("../textFiles/productionForVolt.txt");
+       FileManager fmproductionForVolt(bit::PRODUCTION_FILE_VOLT);
        fmproductionForVolt.get() << vec[i].getHardwareComponentModel() << ' ' << vec[i].getNumberOfHardwareComponentsToBePrinted() << std::endl;
        // delete_line("textFiles/print_jobs.txt",1);
 
-       FileManager fm1("../textFiles/cfg_bit.txt");
-       std::fstream sleepFile("../textFiles/cfg_bit.txt");
+       FileManager fm1(bit::CFG_FILE);
+       std::fstream sleepFile(bit::CFG_FILE);
        unsigned int prod_period_for_cutting_board = 1;
        unsigned int prod_period_for_printing_connections = 1;
        unsigned int prod_period_for_printing_component_mask = 1;
@@ -604,7 +609,7 @@ void HardwarePrinterManager::runASAPMLBit()
          sleepFile.close();
 }
 
-   FileManager fm("../textFiles/production.txt");
+   FileManager fm(bit::PRODUCTION_FILE);
    if (productionFile.is_open())
    {
   Sleep(prod_period_for_cutting_board);

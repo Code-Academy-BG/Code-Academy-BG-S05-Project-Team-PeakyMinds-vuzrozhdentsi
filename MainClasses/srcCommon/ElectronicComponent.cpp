@@ -39,7 +39,8 @@ ElectronicComponent::Rotation ElectronicComponent::getRotationByQuadrant(int x) 
     case 4:
         return ElectronicComponent::Rotation::ThreeQuarters;
         break;
-    // Exception to be thrown
+    default:
+        return ElectronicComponent::Rotation::Zero;; 
     }
 }
 Pin& ElectronicComponent:: getPinById(int wantedId)

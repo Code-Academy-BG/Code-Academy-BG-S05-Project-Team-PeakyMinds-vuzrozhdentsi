@@ -5,6 +5,8 @@
 #include "..\srcCommon\HardwareComponent.hpp"
 #include "..\srcCommon\Board.hpp"
 #include "..\srcCommon\PrinterJob.h"
+
+
 typedef unsigned char u8;
 class HardwarePrinterManager
 {
@@ -14,7 +16,7 @@ class HardwarePrinterManager
     public:
 	std::vector<u8> matrixMask;
 	std::vector<PrinterJob> getComponentRequests();
-	HardwareComponent &getHardwareComponentModel(const std::string &hardwareComponentModel);
+	HardwareComponent getHardwareComponentModel(const std::string &hardwareComponentModel); // не се ползва
 	void cutBoardToFitHardwareComponent(HardwareComponent& hardwareComponent);
 	void printConnectionsBetweenPins(HardwareComponent hardwareComponent);
 	void printComponentsMask(HardwareComponent &HardwareComponent, std::vector<std::vector<char>>& matrixMask);
