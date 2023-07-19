@@ -207,6 +207,11 @@ void OrderManager::showMenu()
     std::cout << "Order added successfully.\n";
 } */
 
+int generateOrderId(){
+    int orderID = 1000 + (rand() % 1000);
+    return orderID;
+}
+
 void OrderManager::addOrder(){
     std::ofstream orderTXTfile(ORDERS_FILE);
 
@@ -222,7 +227,7 @@ void OrderManager::addOrder(){
     std::string hardwareComp;
     int priority = 0;
     int lineCounter = 0;
-    int orderID = 1000 + (rand() % 1000);
+    // int orderID = 1000 + (rand() % 1000);
 
     while (std::getline(fileWithCfgOrders, line)) {
         if (line.empty() || line == " "){
@@ -245,7 +250,7 @@ void OrderManager::addOrder(){
             priority = std::stoi(data);
         } else if (lineCounter == 2) {
             hardwareComp = data;
-            ClientOrder newOrder(orderID, priority, clientName);
+            ClientOrder newOrder(generateOrderId(), priority, clientName);
             newOrder.setHardwareComponentID(hardwareComp);
             orders.push_back(newOrder);
         }
@@ -261,14 +266,14 @@ void OrderManager::addOrder(){
     std::cout << "Orders are correctly add in " << ORDERS_FILE << " .\n";
 }
 
-void OrderManager::getOrdersFromFile()
-{
-    FileManager fm(ORDERS_FILE);
-    while(!fm.get().eof())
-    {
-        orders.emplace_back(ClientOrder(fm.get()));
-    }
-}
+// void OrderManager::getOrdersFromFile()
+// {
+//     FileManager fm(ORDERS_FILE);
+//     while(!fm.get().eof())
+//     {
+//         orders.emplace_back(ClientOrder(fm.get()));
+//     }
+// }
 
 void OrderManager::displayOrders(const std::vector<ClientOrder>& orders)
 {
@@ -282,15 +287,15 @@ void OrderManager::displayOrders(const std::vector<ClientOrder>& orders)
 
     for (const auto &order : orders)
     {                                     
-        std::cout << "Client Name:" << order.getClientName() << " "; // TODO clientName
-        std::cout << "Order ID: " << order.getId() << " ";    // getId
+        std::cout << "Client Name:" << order.getClientName() << " "; 
+        std::cout << "Order ID: " << order.getId() << " ";   
 
-        std::cout << "Components:\n";
-        const auto &components = order.getHardwareComponents();
-        for (const auto &component : components)
-        {
-            std::cout << component<<' ';
-        }
+        std::cout << "HardwareID: " << order.getHardwareComponentID() << "\n";;
+        // const auto &components = order.getHardwareComponents();
+        // for (const auto &component : components)
+        // {
+        //     std::cout << component<<' ';
+        // }
 
         std::cout << "-------------------------\n";
       
@@ -305,7 +310,7 @@ void OrderManager::displayOrdersByHistory()
 void OrderManager::displayOrdersByPriority()
 {
     int priorityChoice;
-    std::vector<ClientOrder> orderedOrders = orders;
+    // std::vector<ClientOrder> orderedOrders = orders;
 
     std::cout << "Select priority:\n";
     std::cout << "1. High\n";
@@ -313,17 +318,23 @@ void OrderManager::displayOrdersByPriority()
     std::cout << "Enter your choice: ";
     std::cin >> priorityChoice;
 
-    std::function priorityPredicate = [](const ClientOrder& o1, const ClientOrder& o2) {return o1.getPriorityAsInt() < o2.getPriorityAsInt();};
+    // std::function priorityPredicate = [](const ClientOrder& o1, const ClientOrder& o2) {return o1.getPriorityAsInt() < o2.getPriorityAsInt();};
 
     ClientOrder::Priority priority;
     if (priorityChoice == 1)
-    {
-        priority = ClientOrder::Priority::HIGH;
+    {   
+        std::stable_sort(orders.begin(), orders.end(), [](const ClientOrder& order1, const ClientOrder& order2) {
+            return order1.getPriorityAsInt() < order2.getPriorityAsInt();
+        });
+        // priority = ClientOrder::Priority::HIGH;
     }
     else if (priorityChoice == 2)
     {
-        priority = ClientOrder::Priority::NORMAL;
-        priorityPredicate = [](const ClientOrder& o1, const ClientOrder& o2) {return o1.getPriorityAsInt() > o2.getPriorityAsInt();};
+        std::stable_sort(orders.begin(), orders.end(), [](const ClientOrder& order1, const ClientOrder& order2) {
+            return order1.getPriorityAsInt() > order2.getPriorityAsInt();
+        });
+        // priority = ClientOrder::Priority::NORMAL;
+        // priorityPredicate = [](const ClientOrder& o1, const ClientOrder& o2) {return o1.getPriorityAsInt() > o2.getPriorityAsInt();};
 
     }
     else
@@ -332,8 +343,8 @@ void OrderManager::displayOrdersByPriority()
         return;
     }
 
-    std::stable_sort(orderedOrders.begin(), orderedOrders.end(), priorityPredicate);
-    displayOrders(orderedOrders);
+    // std::stable_sort(orderedOrders.begin(), orderedOrders.end(), priorityPredicate);
+    displayOrders(orders);
 }
 
 void OrderManager::cancelOrder()
