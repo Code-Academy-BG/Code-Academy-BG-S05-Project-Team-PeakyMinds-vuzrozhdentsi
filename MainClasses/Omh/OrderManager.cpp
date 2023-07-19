@@ -121,7 +121,7 @@ void OrderManager::showMenu()
     std::cout << "Order added successfully.\n";
 } 
 
-/* void OrderManager::getOrder()
+ void OrderManager::getOrder()
 {
     std::string orderInfo = "";
 ​
@@ -313,7 +313,7 @@ void OrderManager::displayOrdersByPriority()
 
     // std::function priorityPredicate = [](const ClientOrder& o1, const ClientOrder& o2) {return o1.getPriorityAsInt() < o2.getPriorityAsInt();};
 
-    ClientOrder::Priority priority;
+    //ClientOrder::Priority priority;
     if (priorityChoice == 1)
     {   
         std::stable_sort(orders.begin(), orders.end(), [](const ClientOrder& order1, const ClientOrder& order2) {

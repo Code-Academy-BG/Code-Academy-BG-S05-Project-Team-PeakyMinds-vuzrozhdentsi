@@ -20,11 +20,11 @@ public:
 
     void showMenu();
     void addOrder();
-    void getOrdersFromFile();
+    //void getOrdersFromFile();
     void displayOrdersByHistory();
     void displayOrdersByPriority();
     void cancelOrder();
-    void getOrder();
+    //void getOrder();
 
 private:
     static const std::string ORDERS_FILE;
@@ -32,7 +32,7 @@ private:
 
     // void checkInput();
     std::string generateRandomId();
-    void saveOrderToFile(const ClientOrder& order);
+    //void saveOrderToFile(const ClientOrder& order);
     void displayOrders(const std::vector<ClientOrder>& orders);
 };
 

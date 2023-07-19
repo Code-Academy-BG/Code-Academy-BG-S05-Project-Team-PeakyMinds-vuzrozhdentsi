@@ -27,10 +27,8 @@ private:
     unsigned int m_defaultMinQuantityForNewComponents = 5;
 
 public:
-    Amp(std::map<std::string, int> currentQuantity = {}, std::map<std::string, int> minQuantity = {},
-    unsigned int defaultMinQuantityForNewComponents = 5) : m_currentQuantity(currentQuantity), m_minQuantity(minQuantity),
-    m_defaultMinQuantityForNewComponents(5)
-    {}
+    Amp(std::map<std::string, int> currentQuantity = {}, std::map<std::string, int> minQuantity = {}) : m_currentQuantity(currentQuantity), m_minQuantity(minQuantity) {}
+
     void AmpMenu(std::istream &strm);
     void CheckForNewComponentsFromVolt();
     void getCurrentInventory();
