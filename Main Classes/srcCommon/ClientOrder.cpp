@@ -28,20 +28,20 @@ void ClientOrder::setClientName(const std::string &name)
     clientName = name;
 }
 
-std::vector<ClientOrder::HardwareComponentID> ClientOrder::getHardwareComponents() const
-{
-    return hardwareComponents;
-}
+// std::vector<ClientOrder::HardwareComponentID> ClientOrder::getHardwareComponents() const
+// {
+//     return hardwareComponents;
+// }
 
-std::vector<ClientOrder::ElectronicComponentID> ClientOrder::getElectronicComponents() const
-{
-    return electronicComponents;
-}
+// std::vector<ClientOrder::ElectronicComponentID> ClientOrder::getElectronicComponents() const
+// {
+//     return electronicComponents;
+// }
 
-void ClientOrder::setId(int orderId)
-{
-    id = orderId;
-}
+// void ClientOrder::setId(int orderId)
+// {
+//     id = orderId;
+// }
 
 void ClientOrder::setStatus(Status orderStatus)
 {
@@ -91,25 +91,25 @@ void ClientOrder::setPriority(int orderPriority)
     }
 }
 
-void ClientOrder::setHardwareComponents(const std::vector<HardwareComponentID> &components)
-{
-    hardwareComponents = components;
-}
+// void ClientOrder::setHardwareComponents(const std::vector<HardwareComponentID> &components)
+// {
+//     hardwareComponents = components;
+// }
 
-void ClientOrder::setElectronicComponents(const std::vector<ElectronicComponentID> &components)
-{
-    electronicComponents = components;
-}
+// void ClientOrder::setElectronicComponents(const std::vector<ElectronicComponentID> &components)
+// {
+//     electronicComponents = components;
+// }
 
-std::vector<ElectronicComponent> ClientOrder::getElectronicComponentsWithDesign() const
-{
-    return this->newElectronicComponentsWithDesign;
-}
+// std::vector<ElectronicComponent> ClientOrder::getElectronicComponentsWithDesign() const
+// {
+//     return this->newElectronicComponentsWithDesign;
+// }
 
-std::vector<HardwareComponent> ClientOrder::getHardwareComponentsWithDesign() const
-{
-    return this->newHardwareComponentsWithDesign;
-}
+// std::vector<HardwareComponent> ClientOrder::getHardwareComponentsWithDesign() const
+// {
+//     return this->newHardwareComponentsWithDesign;
+// }
 
 int ClientOrder::getStatusAsInt() const
 {
@@ -171,41 +171,41 @@ std::ostream &operator<<(std::ostream &stream, const ClientOrder &order)
     return stream;
 }
 
-std::istream &operator>>(std::istream &stream, ClientOrder &order)
-{
-    size_t hardwareComponentsSize{0};
-    size_t electronicComponentsSize{0};
-    int priorityInt{0};
-    int statusInt{0};
-    stream >> order.id >> priorityInt >> statusInt >> order.clientName >> hardwareComponentsSize;
-    order.setPriority(priorityInt);
-    order.setStatus(statusInt);
-    for (size_t i = 0; i < hardwareComponentsSize; i++)
-    {
-        ClientOrder::HardwareComponentID hc;
-        stream >> hc;
-        order.hardwareComponents.push_back(hc);
-    }
-    stream >> electronicComponentsSize;
-    for (size_t i = 0; i < electronicComponentsSize; i++)
-    {
-        ClientOrder::ElectronicComponentID ec;
-        stream >> ec;
-        order.electronicComponents.push_back(ec);
-    }
-    stream >> hardwareComponentsSize;
-    for (size_t i = 0; i < hardwareComponentsSize; i++)
-    {
-        HardwareComponent hc;
-        stream >> hc;
-        order.newHardwareComponentsWithDesign.push_back(hc);
-    }
-    stream >> electronicComponentsSize;
-    for (size_t i = 0; i < electronicComponentsSize; i++)
-    {
-        ElectronicComponent ec;
-        stream >> ec;
-        order.newElectronicComponentsWithDesign.push_back(ec);
-    }
-    return stream;
-}
+// std::istream &operator>>(std::istream &stream, ClientOrder &order)
+// {
+//     size_t hardwareComponentsSize{0};
+//     size_t electronicComponentsSize{0};
+//     int priorityInt{0};
+//     int statusInt{0};
+//     stream >> order.id >> priorityInt >> statusInt >> order.clientName >> hardwareComponentsSize;
+//     order.setPriority(priorityInt);
+//     order.setStatus(statusInt);
+//     for (size_t i = 0; i < hardwareComponentsSize; i++)
+//     {
+//         ClientOrder::HardwareComponentID hc;
+//         stream >> hc;
+//         order.hardwareComponents.push_back(hc);
+//     }
+//     stream >> electronicComponentsSize;
+//     for (size_t i = 0; i < electronicComponentsSize; i++)
+//     {
+//         ClientOrder::ElectronicComponentID ec;
+//         stream >> ec;
+//         order.electronicComponents.push_back(ec);
+//     }
+//     stream >> hardwareComponentsSize;
+//     for (size_t i = 0; i < hardwareComponentsSize; i++)
+//     {
+//         HardwareComponent hc;
+//         stream >> hc;
+//         order.newHardwareComponentsWithDesign.push_back(hc);
+//     }
+//     stream >> electronicComponentsSize;
+//     for (size_t i = 0; i < electronicComponentsSize; i++)
+//     {
+//         ElectronicComponent ec;
+//         stream >> ec;
+//         order.newElectronicComponentsWithDesign.push_back(ec);
+//     }
+//     return stream;
+// }

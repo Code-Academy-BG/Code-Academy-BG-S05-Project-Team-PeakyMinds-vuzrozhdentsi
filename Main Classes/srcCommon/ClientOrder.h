@@ -30,19 +30,20 @@ private:
     Status status;
     Priority priority;
     std::string clientName;
-    std::vector<HardwareComponentID> hardwareComponents;
-    std::vector<HardwareComponent> newHardwareComponentsWithDesign;
-    std::vector<ElectronicComponentID> electronicComponents;
-    std::vector<ElectronicComponent> newElectronicComponentsWithDesign;
+    HardwareComponentID hardwareComp;
+    // std::vector<HardwareComponentID> hardwareComponents;
+    // std::vector<HardwareComponent> newHardwareComponentsWithDesign;
+    // std::vector<ElectronicComponentID> electronicComponents;
+    // std::vector<ElectronicComponent> newElectronicComponentsWithDesign;
 
 public:
-    ClientOrder(int incomePriority, std::string incomeName): id{0}, status{Status::UNPROCESSED}, priority{static_cast<Priority>(incomePriority)}, clientName {incomeName} {};
+    ClientOrder(int orderId, int incomePriority, std::string incomeName): id{orderId}, status{Status::UNPROCESSED}, priority{static_cast<Priority>(incomePriority)}, clientName {incomeName} {};
     ClientOrder(std::istream & stream)
     {
         stream >> *this;
     }
+    HardwareComponentID setHardwareComponentID(HardwareComponentID hCID) {hardwareComp = hCID;}
     int getId() const;
-    void setId(int orderId);
     const std::string getClientName() const;
     void setClientName(const std::string & name);
     Status getStatus() const;
@@ -55,22 +56,22 @@ public:
     void setPriority(int orderPriority);
     std::vector<HardwareComponentID> getHardwareComponents() const;
     std::vector<HardwareComponent> getHardwareComponentsWithDesign() const;
-    void addHCDesign(const HardwareComponent& hc)
-    {
-        newHardwareComponentsWithDesign.push_back(hc);
-    }
-    void addElCDesign(const ElectronicComponent& ec)
-    {
-        newElectronicComponentsWithDesign.push_back(ec);
-    }
-    void addHC(const std::string& hc)
-    {
-        hardwareComponents.push_back(hc);
-    }
-    void addElC(const std::string& ec)
-    {
-        electronicComponents.push_back(ec);
-    }
+    // void addHCDesign(const HardwareComponent& hc)
+    // {
+    //     newHardwareComponentsWithDesign.push_back(hc);
+    // }
+    // void addElCDesign(const ElectronicComponent& ec)
+    // {
+    //     newElectronicComponentsWithDesign.push_back(ec);
+    // }
+    // void addHC(const std::string& hc)
+    // {
+    //     hardwareComponents.push_back(hc);
+    // }
+    // void addElC(const std::string& ec)
+    // {
+    //     electronicComponents.push_back(ec);
+    // }
     void setHardwareComponents(const std::vector<HardwareComponentID>& components);
     std::vector<ElectronicComponentID> getElectronicComponents() const;
     std::vector<ElectronicComponent> getElectronicComponentsWithDesign() const;

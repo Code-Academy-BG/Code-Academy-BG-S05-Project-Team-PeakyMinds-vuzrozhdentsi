@@ -1,5 +1,6 @@
 #include "OrderManager.hpp"
 const std::string OrderManager::ORDERS_FILE = "orders.txt";
+const std::string OrderManager::INCOME_ORDERS = "test_orders.txt";
 // Stream operator overload for displaying a ClientOrder object
 //std::ostream &operator<<(std::ostream &os, const ClientOrder &order)
 std::string generateRandomId()
@@ -43,7 +44,6 @@ void OrderManager::showMenu()
         switch (choice)
         {
         case 1:
-            //Not implemented
             addOrder();
             break;
         case 2:
@@ -215,13 +215,14 @@ void OrderManager::addOrder(){
         return;
     }
 
-    std::ifstream fileWithCfgOrders("test_orders.txt");
+    std::ifstream fileWithCfgOrders(INCOME_ORDERS);
 
     std::string line;
-    int lineCounter = 0;
     std::string clientName;
-    int priority = 0; 
-
+    std::string hardwareComp;
+    int priority = 0;
+    int lineCounter = 0;
+    int orderID = 1000 + (rand() % 1000);
 
     while (std::getline(fileWithCfgOrders, line)) {
         if (line.empty() || line == " "){
@@ -232,6 +233,7 @@ void OrderManager::addOrder(){
             continue;
         }
         size_t colonPos = line.find(':');
+
         if (colonPos != std::string::npos) {
         std::string data = line.substr(colonPos + 1);
         if(data.empty() || data == " ") {
@@ -241,10 +243,12 @@ void OrderManager::addOrder(){
             clientName = data;
         } else if (lineCounter == 1) {
             priority = std::stoi(data);
+        } else if (lineCounter == 2) {
+            hardwareComp = data;
+            ClientOrder newOrder(orderID, priority, clientName);
+            newOrder.setHardwareComponentID(hardwareComp);
+            orders.push_back(newOrder);
         }
-        ClientOrder newOrder(priority, clientName);
-        orders.emplace_back(newOrder);
-
         orderTXTfile << data << '\n'; 
         }
         lineCounter++;
@@ -275,6 +279,7 @@ void OrderManager::displayOrders(const std::vector<ClientOrder>& orders)
     }
 
     std::cout << "Orders:\n";
+
     for (const auto &order : orders)
     {                                     
         std::cout << "Client Name:" << order.getClientName() << " "; // TODO clientName
@@ -288,6 +293,7 @@ void OrderManager::displayOrders(const std::vector<ClientOrder>& orders)
         }
 
         std::cout << "-------------------------\n";
+      
     }
 }
 
@@ -307,7 +313,7 @@ void OrderManager::displayOrdersByPriority()
     std::cout << "Enter your choice: ";
     std::cin >> priorityChoice;
 
-    std::function priorityPredicate = [](const ClientOrder& o1, const ClientOrder& o2) {return o1.getStatusAsInt() < o2.getStatusAsInt();};
+    std::function priorityPredicate = [](const ClientOrder& o1, const ClientOrder& o2) {return o1.getPriorityAsInt() < o2.getPriorityAsInt();};
 
     ClientOrder::Priority priority;
     if (priorityChoice == 1)
@@ -317,7 +323,7 @@ void OrderManager::displayOrdersByPriority()
     else if (priorityChoice == 2)
     {
         priority = ClientOrder::Priority::NORMAL;
-        priorityPredicate = [](const ClientOrder& o1, const ClientOrder& o2) {return o1.getStatusAsInt() > o2.getStatusAsInt();};
+        priorityPredicate = [](const ClientOrder& o1, const ClientOrder& o2) {return o1.getPriorityAsInt() > o2.getPriorityAsInt();};
 
     }
     else

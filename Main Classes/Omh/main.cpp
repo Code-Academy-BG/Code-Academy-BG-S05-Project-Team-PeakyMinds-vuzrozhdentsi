@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 #include "OrderManager.hpp"
 
 /*
@@ -7,6 +8,8 @@
 
 
 int main(){
+    srand(time(0));
+
     OrderManager ordManager;
     ordManager.showMenu();
     return 0;

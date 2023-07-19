@@ -28,6 +28,7 @@ public:
 
 private:
     static const std::string ORDERS_FILE;
+    static const std::string INCOME_ORDERS;
 
     // void checkInput();
     std::string generateRandomId();
