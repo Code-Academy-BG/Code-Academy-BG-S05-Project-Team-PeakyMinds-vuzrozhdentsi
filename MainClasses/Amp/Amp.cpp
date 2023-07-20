@@ -33,7 +33,7 @@ void Amp::AmpMenu(std::istream &strm)
     int choice = 0;
     while (!(strm >> choice).eof())
     {
-        //std::cout << " the choice we got is:" << choice;
+        std::cout << " the choice we got is:" << choice;
         checkInput();
         if (choice < 1 || choice > 3)
         {
@@ -109,7 +109,7 @@ void Amp::CheckForNewComponentsFromVolt()
 void Amp::getCurrentInventory()
 {
     m_currentQuantity = {};
-    FileManager fm("../textFiles/Inventory.txt");
+    FileManager fm(inventory_name);
 
     std::string id = "";
     int quantity = 0;
@@ -124,7 +124,7 @@ void Amp::getMinQuantity()
 {
     m_minQuantity = {};
 
-    FileManager fm("../textFiles/cfg_amp.txt");
+    FileManager fm(cfg_name);
 
     std::string id = "";
     int quantity = 0;
@@ -172,17 +172,22 @@ void Amp::printInventory()
 
 bool Amp::sufficientQuantityPresent(const std::string &componentName)
 {
-    auto iter = m_currentQuantity.begin();
-    auto iter2 = m_minQuantity.begin();
+    auto iter = m_currentQuantity.find(componentName);
+    auto iter2 = m_minQuantity.find(componentName);
 
-    while (iter->first != componentName)
+    /*std::function<bool(std::string)>  nameMatch = [&](std::string name)
+    {
+        return (componentName == name);
+    };
+    auto it = std::find_if(m_currentQuantity.begin(), m_currentQuantity.end(), nameMatch);*/
+    /*while (iter->first != componentName)
     {
         ++iter;
     }
     while (iter2->first != iter->first)
     {
         ++iter2;
-    }
+    }*/
     if (iter->second >= iter2->second)
     {
         return true;
@@ -193,17 +198,8 @@ bool Amp::sufficientQuantityPresent(const std::string &componentName)
 
 void Amp::orderResources(const std::string &id)
 {
-    auto iter = m_currentQuantity.begin();
-    auto iter2 = m_minQuantity.begin();
-
-    while (iter->first != id)
-    {
-        ++iter;
-    }
-    while (iter2->first != iter->first)
-    {
-        ++iter2;
-    }
+    auto iter = m_currentQuantity.find(id);
+    auto iter2 = m_minQuantity.find(id);
     if (iter->first == iter2->first && iter->second < iter2->second)
     {
         if (iter->second < 0)
@@ -240,7 +236,7 @@ void Amp::minQuantitySettingsMenu(std::istream &strm)
     while (!(strm >> choice).eof())
     {
         checkInput();
-        //std::cout << " the choice we got is:" << choice;
+        std::cout << " the choice we got is:" << choice;
         if (choice < 1 || choice > 3)
         {
             std::cout << "Enter a valid choice!";
@@ -280,7 +276,7 @@ void Amp::setDefaultMinQuantity(std::istream &strm)
     while (!(strm >> n).eof())
     {
         checkInput();
-        //std::cout << " the choice we got is:" << n;
+        std::cout << " the choice we got is:" << n;
         if (n < 0)
         {
             std::cout << "Enter either a Positive Number or a Zero:";
@@ -330,7 +326,7 @@ void Amp::setComponentMinQuantity(std::istream &strm)
     while (!(strm >> componentName).eof())
     {
         checkInput();
-        //std::cout << " the choice we got is:" << componentName;
+        std::cout << " the choice we got is:" << componentName;
         bool validNameEntered = false;
 
         if (componentName == "0")
@@ -362,7 +358,7 @@ void Amp::setComponentMinQuantity(std::istream &strm)
 
     if (componentName == "0")
     {
-        std::cout<<"Going Back.";
+        std::cout << "Going Back.";
     }
     else
     {
@@ -373,7 +369,7 @@ void Amp::setComponentMinQuantity(std::istream &strm)
         while (!(strm >> newQuantity).eof())
         {
             checkInput();
-            //std::cout << " the choice we got is:" << newQuantity;
+            std::cout << " the choice we got is:" << newQuantity;
             if (newQuantity <= 0)
             {
                 std::cout << "Please enter a quantity above 0!";
@@ -383,27 +379,23 @@ void Amp::setComponentMinQuantity(std::istream &strm)
                 break;
             }
         }
-        
+
         iter->second = newQuantity;
         std::cout << "\nSuccessfully changed min Quantity!";
         updateInvertory();
     }
     minQuantitySettingsMenu(strm);
-
 }
 
 void Amp::updateInvertory()
 {
-    FileManager Inventory("../textFiles/Inventory.txt");
-    FileManager cfg_amp("../textFiles/cfg_amp.txt");
+    FileManager Inventory(inventory_name);
+    FileManager cfg_amp(cfg_name);
 
     for (auto iter = m_currentQuantity.begin(); iter != m_currentQuantity.end(); ++iter)
     {
-        auto iter2 = m_minQuantity.begin();
-        while (iter2->first != iter->first)
-        {
-            ++iter2;
-        }
+        auto iter2 = m_minQuantity.find(iter->first);
+        
 
         Inventory.get() << iter->first << ' ' << iter->second << '\n';
         cfg_amp.get() << iter2->first << ' ' << iter2->second << '\n';

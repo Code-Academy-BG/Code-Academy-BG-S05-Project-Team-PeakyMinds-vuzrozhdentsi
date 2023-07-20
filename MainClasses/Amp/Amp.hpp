@@ -17,7 +17,8 @@ inventory.txt) и правене на поръчки на ресурси.
 #include <iostream>
 #include <cmath>
 #include <limits>
-
+#include <functional>
+#include<algorithm>
 class Amp
 {
 private:
@@ -25,6 +26,8 @@ private:
     std::map<std::string, int> m_currentQuantity = {};
     std::map<std::string, int> m_minQuantity = {};
     unsigned int m_defaultMinQuantityForNewComponents = 5;
+    std::string inventory_name = "../textFiles/Inventory.txt";
+    std::string cfg_name = "../textFiles/cfg_amp.txt";
 
 public:
     Amp(std::map<std::string, int> currentQuantity = {}, std::map<std::string, int> minQuantity = {}) : m_currentQuantity(currentQuantity), m_minQuantity(minQuantity) {}
@@ -42,4 +45,9 @@ public:
     void setComponentMinQuantity(std::istream &strm);
     void updateInvertory();
     void Run();
+<<<<<<< Updated upstream
 };
+=======
+    
+};
+>>>>>>> Stashed changes
